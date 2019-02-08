@@ -26,7 +26,7 @@ public class login extends HttpServlet {
 		{
 			response.sendRedirect("login.html");
 		}
-		response.sendRedirect("displayclients");
+		response.sendRedirect("displayclients.jsp?id="+mobileno);
 
 		response.getWriter().println("loginsuccessful");
 		}catch(Exception e) {

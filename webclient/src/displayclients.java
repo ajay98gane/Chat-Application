@@ -30,18 +30,20 @@ public class displayclients extends HttpServlet
 		out.println("<html><head><style>p{background:red;margin:auto;}div {\n" + 
 				"    position:relative;left:300px;background:orange;width=50px;\n" + 
 				"  }</style></head><body>");
-		out.println("<p>availble clients fg are</p><br>");
+		out.println("<p>availble clients  are</p><br>");
 		out.println("<form name='clients'>");
 		while(result.next())
 		{	
 			//out.print("<a href='displayinfo?user=");
 			out.print("<input type='button' name='clientlist' value='");
 			out.print(result.getString("username"));
-			out.print("' onclick='sendinfo(this.value)'><br>");
+			out.print("' onclick='sendinfo(this.value)'><br>\n");
 			//out.print(result.getString("username"));
 			//out.print("<br>");
 
-		}out.print("</form><br><a href='index.html'> logout</a></form><div id=\"users\">user will be displayed here</div><script>function sendinfo(str) {\n" + 
+		}out.print("</form><br><a href='index.html'> logout</a></form>"
+				+ "\n<div id=\"users\">user will be displayed here</div>\n"
+				+ "<script>function sendinfo(str) {\n" + 
 				"  var xhttp;  \n" + 
 				"  xhttp = new XMLHttpRequest();\n" + 
 				"  xhttp.onreadystatechange = function() {\n" + 
@@ -49,7 +51,7 @@ public class displayclients extends HttpServlet
 				"      document.getElementById(\"users\").innerHTML = this.responseText;\n" + 
 				"    }\n" + 
 				"  };\n" + 
-				"  xhttp.open(\"GET\", \"displayinfo?user=\"+str, true);\n" + 
+				"  xhttp.open(\"GET\", \"sendtext.jsp?user=\"+str, true);\n" + 
 				"  xhttp.send();\n" + 
 				"}</script></body></html>");
 		}catch(Exception e) {}

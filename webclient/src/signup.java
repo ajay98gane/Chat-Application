@@ -36,7 +36,7 @@ public class signup extends HttpServlet {
 		String newpass=password.hashCode()+"";
 		database.addValueInfoTable(username,newpass,name,mobileno,emailid,address);
 		//response.getWriter().println(username);
-		response.sendRedirect("displayclients");
+		response.sendRedirect("displayclients.jsp?id="+mobileno);
 		}
 		catch(Exception e)
 		{}
