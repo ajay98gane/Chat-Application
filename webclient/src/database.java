@@ -24,6 +24,10 @@ public class database {
 		createmtable.executeUpdate();
 		PreparedStatement createetable=con.prepareStatement("CREATE TABLE IF NOT EXISTS password(mobileno TEXT,pass TEXT)");
 		createetable.executeUpdate();
+		PreparedStatement createmsgtable=con.prepareStatement("CREATE TABLE IF NOT EXISTS messages(id INT,msg TEXT)");
+		createmsgtable.executeUpdate();
+		PreparedStatement createmaptable=con.prepareStatement("CREATE TABLE IF NOT EXISTS msgmap(fromuser TEXT,touser TEXT,notif INT DEFAULT '0',id INT PRIMARY KEY AUTO_INCREMENT)");
+		createmaptable.executeUpdate();
 		//System.out.println("table created");
 	}
 	public static void addValueInfoTable(String username,String pass,String name,String mobileno,String emailid,String address) throws Exception
@@ -39,7 +43,7 @@ public class database {
 	public static boolean loginCheck(String user,String pass) throws Exception
 	{
 		Connection con=getConnection();
-		//createInfoTable();
+		createInfoTable();
 		boolean check=false;
 		PreparedStatement checkLogin=con.prepareStatement("SELECT pass FROM password WHERE mobileno='"+user+"'");
 		ResultSet result=checkLogin.executeQuery();
