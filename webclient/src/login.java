@@ -1,6 +1,8 @@
 
 
 import java.io.IOException;
+
+import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
@@ -17,18 +19,20 @@ public class login extends HttpServlet {
 	protected void service(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		
 		try {
-		String mobileno=request.getParameter("mobileno");
+		String username=request.getParameter("username");
 		String password=request.getParameter("password");
 		String newpass=password.hashCode()+"";
-		
-		boolean check=database.loginCheck(mobileno,newpass);
+		boolean check=database.loginCheck(username,newpass);
 		if(check==false)
 		{
 			response.sendRedirect("login.html");
 		}
-		response.sendRedirect("displayclients.jsp?id="+mobileno);
+		//response.sendRedirect("displayclients.jsp?id="+username);
+		request.setAttribute("username",username);
+        RequestDispatcher rd=request.getRequestDispatcher("userlist");  
+        rd.forward(request, response);
 
-		response.getWriter().println("loginsuccessful");
+		//response.getWriter().println("loginsuccessful");
 		}catch(Exception e) {
 			System.out.println(e);
 			

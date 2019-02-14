@@ -1,11 +1,17 @@
 <%@ page import="java.sql.*"  language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%> 
     <%@page import="webclient.*" %>
+        <%@page import="java.util.*" %>
 <!DOCTYPE html>
 <html>
 <head><style>p{background:#97cffb;margin:auto;}div {
     position:relative;left:300px;background:#97cffb;width=50px;}button:hover {
   filter: brightness(85%);
+}
+
+.button:active {
+  transform: translateY(4px);
+}
 
   }body{color: #0436af;
 	     font-size:20px;}</style>
@@ -15,10 +21,9 @@
 <body bgcolor="#ccf5ff">
 <script>
 //console.log("script executed!!!");
-var id="<%=request.getParameter("id")%>";
+var id="<%=(String)request.getAttribute("username")%>";<% String id=(String)request.getAttribute("username");%>
+<%Map<String,String> userlist=(HashMap<String,String>)request.getAttribute("list");%>
  var webSocket = new WebSocket("ws://"+window.location.hostname+":8080/webclient/websocket/"+id);
-//var displaytext=document.getElementById("chatbox").contentWindow.document.getElementId("displaymsg");
-//var message=document.getElementById("textID");
 webSocket.onmessage = function(message){ wsGetMessage(message);};
 var tempuser="5jhgfd";
 window.user=tempuser;
@@ -48,65 +53,52 @@ function wsGetMessage(message){
 
 			  http = new XMLHttpRequest();
 			  http.onreadystatechange = function() {
-			    if (this.readyState == 4 && this.status == 200) {
-			    /* 	var para = document.createElement("P");
-			    	  var t = document.createTextNode(this.responseText);
-			    	  para.appendChild(t);
-			    	  document.getElementById(msg.from).appendChild(para); */
+			    if (this.readyState == 4 && this.status == 200) 
+			    {
 			      document.getElementById(msg.from).innerHTML=this.responseText;
 			    }
 			  };
-			  http.open("GET", "notif.jsp?uniqueid="+msg.id, true);
-			  http.send();
+			  http.open("POST","notif", true);
+			  http.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
+			  http.send("uniqueid="+msg.id);
 		}
 }
 
 </script>
-<% String id=request.getParameter("id");
-Connection con=database.getConnection();
-PreparedStatement checkLogin=con.prepareStatement("SELECT username FROM storage WHERE mobileno <> '"+id+"'");
-ResultSet result=checkLogin.executeQuery();
- %>
+
  
 <p	style ="
     width: 200px;
     margin-left: 0px;">welcome <%=id %><br>available users are</p><br>
-<form name='clients' style="
-    width: 200px;
+<form name='clients' style=" width: 200px;
     position: relative;
     right: 300px;">
-<%while(result.next())
-{ %>
-<input type='button' name='clientlist' value='<%=result.getString("username")%>' onclick='sendinfo(this.value)' style="
+<%for (Map.Entry<String,String> entry : userlist.entrySet()) { %>
+<button  type='button' name='clientlist' value='<%=entry.getKey()%>' onclick='sendinfo(this.value)' style="
     width: 216px;
+    height:50px;
     margin-left: 300px;background-color: #97cffb;
     box-shadow: 0px 0px 0 1px #147de8;
-		    margin-top: 1px;
+		   margin-bottom:10px;position:absolute;
 		    color: #0436af;
-  font-size:20px;
-    
-    
-">
-<div id='<%=result.getString("username")%>' style="
-    width: 15px;
+  font-size:20px;"><%=entry.getKey()%></button>
+<div id='<%= entry.getKey()%>' style="
+    width: 25px;
     height:25px;
-    left: 500px;
-    right: 0px;
-    bottom: 27px;background-color: #97cffb;
-"><%PreparedStatement getnotification=con.prepareStatement("SELECT notif FROM msgmap WHERE fromuser='"+result.getString("username")+"' AND touser='"+id+"'");
-ResultSet notifi=getnotification.executeQuery();
-while(notifi.next())
-{if((!notifi.getString("notif").equals("0"))&&(notifi.getString("notif")!=null)){
-%><%=notifi.getString("notif") %><%}} %></div>
+    left: 490px;
+    right: 0px;position:relative;margin-bottom:30px;
+    
+    bottom: -10px;background-color: #97cffb;
+"><%=(entry.getValue().equals("0"))?"": entry.getValue()%></div><%} %>
 
- <%} %></form><br><a href='index.html'> logout</a>
+ </form><br><a href='index.html'> logout</a>
 <div id="users" style="
     position:absolute;top:0px;width:1500px;">user will be displayed here</div>
 <script>function sendinfo(str) {
 	 window.user=str;
   var xhttp; 
   
-  var a="user="+str+"&from=<%=request.getParameter("id")%>"; 
+  var a="user="+str+"&from=<%=id%>"; 
 
   xhttp = new XMLHttpRequest();
   xhttp.onreadystatechange = function() {
@@ -115,14 +107,8 @@ while(notifi.next())
       document.getElementById(window.user).innerHTML="";
     }
   };
-  xhttp.open("POST", "sendtext.jsp", true);
+  xhttp.open("POST", "sendbox", true);
   xhttp.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
-  // xhttp.setRequestHeader("Content-length", b.length);
-  //xhttp.setRequestHeader("Connection", "close"); 
-
-	
-
-<%--   xhttp.send("user="+str+"&from=<%=request.getParameter("id")%>");
- --%>xhttp.send(a);}</script>
+	xhttp.send(a);}</script>
 </body>
 </html>

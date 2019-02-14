@@ -1,6 +1,8 @@
 
 
 import java.io.IOException;
+
+import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
@@ -36,7 +38,10 @@ public class signup extends HttpServlet {
 		String newpass=password.hashCode()+"";
 		database.addValueInfoTable(username,newpass,name,mobileno,emailid,address);
 		//response.getWriter().println(username);
-		response.sendRedirect("displayclients.jsp?id="+mobileno);
+		//response.sendRedirect("displayclients.jsp?id="+username);
+		request.setAttribute("username",username);
+        RequestDispatcher rd=request.getRequestDispatcher("userlist");  
+        rd.forward(request, response); 
 		}
 		catch(Exception e)
 		{}
