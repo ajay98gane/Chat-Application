@@ -77,7 +77,7 @@ protected void doPost(HttpServletRequest request, HttpServletResponse response) 
 				messages.add("{\"user\":\"1\",\"msg\":\""+result.getString("msg")+"\"}");
 
 			}
-			System.out.println("{\"user\":\"1\",\"msg\":\""+result.getString("msg")+"\"}");
+			//System.out.println("{\"user\":\"1\",\"msg\":\""+result.getString("msg")+"\"}");
      }
 	 request.setAttribute("to",to);
 	 request.setAttribute("msglist",messages);

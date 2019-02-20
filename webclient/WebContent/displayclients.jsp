@@ -70,6 +70,9 @@ function wsGetMessage(message){
 <p	style ="
     width: 200px;
     margin-left: 0px;">welcome <%=id %><br>available users are</p><br>
+    <form name="vinform">  
+<input type="text" name="name" onkeyup="searchInfo()" autocomplete="off">  
+</form> 
 <form name='clients' style=" width: 200px;
     position: relative;
     right: 300px;">
@@ -94,7 +97,22 @@ function wsGetMessage(message){
  </form><br><a href='index.html'> logout</a>
 <div id="users" style="
     position:absolute;top:0px;width:1500px;">user will be displayed here</div>
-<script>function sendinfo(str) {
+<script>
+function showvalue(str)
+{var xhttp; 
+
+var a="user="+str+"&from=<%=request.getAttribute("from")%>"; 
+
+xhttp = new XMLHttpRequest();
+xhttp.onreadystatechange = function() {
+  if (this.readyState == 4 && this.status == 200) {
+    document.getElementById("usersa").innerHTML = this.responseText;
+  }
+};
+xhttp.open("POST", "displaydetails", true);
+xhttp.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
+	xhttp.send(a);
+	}function sendinfo(str) {
 	 window.user=str;
   var xhttp; 
   
@@ -110,5 +128,40 @@ function wsGetMessage(message){
   xhttp.open("POST", "sendbox", true);
   xhttp.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
 	xhttp.send(a);}</script>
+	<script>
+	function searchInfo()
+	{	var name=document.vinform.name.value;
+/* 		if((name!=null)&&(!name.localeCompare("")))
+		{ *//* 
+	if(!name.localeCompare(""))
+		{
+			document.getElementById("displayall").style.display="block";
+		}
+	else
+		{
+			document.getElementById("displayall").style.display="none";
+		} */
+			var http;
+			var senda="value="+name+"&from=<%=id%>";
+			http=new XMLHttpRequest();
+			http.onreadystatechange=function(){
+				if(this.readyState==4&&this.status==200)
+					{
+					document.getElementById("displayall").innerHTML=this.responseText;
+					
+					}
+			};
+			
+			http.open("POST","showalluser",true);
+			http.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
+			http.send(senda);
+		
+			
+		
+		}</script><div id="displayall" style="position:absolute;
+    left: 8px;
+    top: 77px;
+    width: 130px;
+"></div>
 </body>
 </html>
