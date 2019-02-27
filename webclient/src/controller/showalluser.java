@@ -28,17 +28,16 @@ public class showalluser extends HttpServlet {
 		List<String> availableusers=new ArrayList<String>(); 
 		try {
 			cona = database.getConnection();
-		
+		String from=request.getParameter("from");
 		PreparedStatement showuser=cona.prepareStatement("SELECT username FROM storage WHERE username LIKE'"+request.getParameter("value")+"%' AND username <> '"+request.getParameter("from")+"'");
 		ResultSet r=showuser.executeQuery();
 		while(r.next())
 		{
-			System.out.println(r.getString("username"));
 			availableusers.add(r.getString("username"));
-		}			System.out.println("hello check 2");
+		}			
 
 		 request.setAttribute("listofusers",availableusers);
-		 request.setAttribute("from",request.getParameter("from"));
+		 request.setAttribute("from",from);
 	     RequestDispatcher rd=request.getRequestDispatcher("showallusers.jsp");  
 	     rd.forward(request, response);
 		} catch (Exception e) {

@@ -24,7 +24,7 @@ public class displaydetails extends HttpServlet {
 	private static final long serialVersionUID = 1L;
        
    
-	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+	protected void service(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 				String user=request.getParameter("user");
 				String from=request.getParameter("from");
 				Connection cona;
@@ -47,20 +47,50 @@ public class displaydetails extends HttpServlet {
 				}
 				PreparedStatement friendcheck=cona.prepareStatement("SELECT fromuser,touser FROM msgmap WHERE touser='"+from+"' AND fromuser='"+user+"'");
 				ResultSet friendchecka=friendcheck.executeQuery();
-				String temp="a";
+				String bool="add friend";
+				boolean aa=true;
 				while(friendchecka.next())
 				{
-					temp="b";
+					bool="remove friend";
+
 				}
-				String bool="0";
-				if(temp.equals("b"))
+				PreparedStatement friendrequestcheck=cona.prepareStatement("SELECT fromuser FROM friendrequest WHERE fromuser='"+from+"' OR fromuser='"+user+"'");
+				ResultSet friendrequestCheck=friendrequestcheck.executeQuery();
+				while(friendrequestCheck.next())
+				{	aa=false;
+				//System.out.println(friendrequestCheck.getString("fromuser"));
+				//System.out.println(user);
+
+					if((friendrequestCheck.getString("fromuser")).equals(user))
+					{
+//						bool="cancel friend";
+//					}
+//					else
+//					{
+						bool="accept friend";
+					request.setAttribute("bool",bool);
+					 request.setAttribute("userdetails",userdetails);
+					 request.setAttribute("to",user);
+				     RequestDispatcher rd=request.getRequestDispatcher("displaydetails.jsp");  
+				     rd.forward(request, response); 
+					}
+					else
+					{
+						bool="cancel request";
+						 request.setAttribute("bool",bool);
+						 request.setAttribute("userdetails",userdetails);
+						 request.setAttribute("to",user);
+					     RequestDispatcher rd=request.getRequestDispatcher("displaydetailscheck.jsp");  
+					     rd.forward(request, response); 
+					}
+				}if(aa==true)
 				{
-					bool="1";
-				}
 				 request.setAttribute("bool",bool);
 				 request.setAttribute("userdetails",userdetails);
-			     RequestDispatcher rd=request.getRequestDispatcher("displaydetails.jsp");  
+				 request.setAttribute("to",user);
+			     RequestDispatcher rd=request.getRequestDispatcher("displaydetailscheck.jsp");  
 			     rd.forward(request, response); 
+				}
 				
 				} catch (Exception e) {
 					

@@ -1,13 +1,18 @@
+package controller;
 
 
 import java.io.IOException;
 
 import javax.servlet.RequestDispatcher;
+import javax.servlet.ServletContext;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
+
+import webclient.database;
 
 /**
  * Servlet implementation class signup
@@ -22,6 +27,8 @@ public class signup extends HttpServlet {
    
 	protected void service(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		try {
+			HttpSession session = request.getSession(false);
+			//ServletContext context=getServletContext();
 		String username=request.getParameter("username");
 		String password=request.getParameter("password");
 		String confirmpassword=request.getParameter("confirmpassword");
@@ -39,9 +46,12 @@ public class signup extends HttpServlet {
 		database.addValueInfoTable(username,newpass,name,mobileno,emailid,address);
 		//response.getWriter().println(username);
 		//response.sendRedirect("displayclients.jsp?id="+username);
-		request.setAttribute("username",username);
-        RequestDispatcher rd=request.getRequestDispatcher("userlist");  
-        rd.forward(request, response); 
+//		request.setAttribute("username",username);
+//        RequestDispatcher rd=request.getRequestDispatcher("userlist"); 
+//        rd.forward(request, response); 
+		session.setAttribute("username",username);
+
+		response.sendRedirect("userlist");
 		}
 		catch(Exception e)
 		{}

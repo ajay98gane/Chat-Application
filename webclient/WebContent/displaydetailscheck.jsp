@@ -16,6 +16,5 @@ for(Map.Entry<String,String> entry : userdetails.entrySet())
 	<%} %>
 	
 	<button value="<%=request.getAttribute("bool")%>" onclick="wsSendFriendRequest(this.value,'<%=(String)request.getAttribute("to")%>')"><%=request.getAttribute("bool")%></button>
-	<button value="cancel request" onclick="wsSendFriendRequest(this.value,'<%=(String)request.getAttribute("to")%>')">deny friend request</button>
 </body>
 </html>

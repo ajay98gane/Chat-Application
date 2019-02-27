@@ -7,23 +7,7 @@
 <title>Insert title here</title>
 </head>
 <body>
-<script>
-function showvalue(str)
-{var xhttp; 
 
-var a="user="+str+"&from=<%=request.getAttribute("from")%>"; 
-
-xhttp = new XMLHttpRequest();
-xhttp.onreadystatechange = function() {
-  if (this.readyState == 4 && this.status == 200) {
-    document.getElementById("usersa").innerHTML = this.responseText;
-  }
-};
-xhttp.open("POST", "displaydetails", true);
-xhttp.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
-	xhttp.send(a);
-	}
-</script>
 <%
 List<String> msglist=(ArrayList<String>)request.getAttribute("listofusers");
 for(String s: msglist)
