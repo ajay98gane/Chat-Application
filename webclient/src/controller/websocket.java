@@ -92,7 +92,7 @@ public class websocket {
 	    else if(((String)message.get("status")).equalsIgnoreCase("accept friend"))
 	    {
 	    	try {
-				database.removeFriendRequest(to,from);
+				database.removeFriendRequest(from,to);
 				
 				database.addFriend(from,to);
 				
@@ -103,7 +103,7 @@ public class websocket {
 	    else if(((String)message.get("status")).equalsIgnoreCase("cancel request"))
 	    {
 	    	try {
-				database.removeFriendRequest(to,from);
+				database.removeFriendRequest(from,to);
 				
 				
 			} catch (Exception e) {

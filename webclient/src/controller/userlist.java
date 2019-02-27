@@ -23,7 +23,7 @@ public class userlist extends HttpServlet {
 
 	protected void service(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		Map<String,String> friendlist=new HashMap<String,String>();
-		HttpSession session = request.getSession(false);
+		HttpSession session = request.getSession();
 		//ServletContext context=getServletContext();
 		String username=(String)session.getAttribute("username");
 		Connection con;

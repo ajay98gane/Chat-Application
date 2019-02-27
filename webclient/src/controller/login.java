@@ -24,7 +24,7 @@ public class login extends HttpServlet {
 	protected void service(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		
 		try {
-			HttpSession session = request.getSession(false);
+			HttpSession session = request.getSession();
 			//ServletContext context=getServletContext();
 		String username=request.getParameter("username");
 		String password=request.getParameter("password");
@@ -44,6 +44,7 @@ public class login extends HttpServlet {
 
 		//response.getWriter().println("loginsuccessful");
 		}catch(Exception e) {
+			e.printStackTrace();
 			System.out.println(e);
 			
 		}

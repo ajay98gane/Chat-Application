@@ -27,7 +27,7 @@ public class signup extends HttpServlet {
    
 	protected void service(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		try {
-			HttpSession session = request.getSession(false);
+			HttpSession session = request.getSession();
 			//ServletContext context=getServletContext();
 		String username=request.getParameter("username");
 		String password=request.getParameter("password");
@@ -52,6 +52,7 @@ public class signup extends HttpServlet {
 		session.setAttribute("username",username);
 
 		response.sendRedirect("userlist");
+		System.out.println("logidfsn");
 		}
 		catch(Exception e)
 		{}
