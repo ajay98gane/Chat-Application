@@ -18,7 +18,7 @@ public class websocket {
 	@OnOpen
 	public void start(Session session,@PathParam("cid")String name)
 	{	this.name=name;
-	//System.out.println(name);
+	System.out.println(name);
 		clientDetails.put(name,session);
 	}
 	@OnMessage
@@ -28,7 +28,7 @@ public class websocket {
 	    String from=(String)message.get("from");
 	    String to=(String)message.get("to");
 	    Connection con=database.getConnection();
-	   // System.out.println(((String)message.get("status")));
+	    System.out.println(((String)message.get("status")));
 	    if(((String)message.get("msg")).equals("0"))
 	    {
 	    PreparedStatement getmap=con.prepareStatement("SELECT fromuser,touser,id FROM msgmap WHERE fromuser='"+from+"' AND touser='"+to+"'");

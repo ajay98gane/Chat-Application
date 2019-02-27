@@ -32,11 +32,12 @@ public class userlist extends HttpServlet {
 		
 		PreparedStatement checkLogin=con.prepareStatement("SELECT fromuser,notif FROM msgmap WHERE touser= '"+username+"'");
 		ResultSet result=checkLogin.executeQuery();
+		//System.out.println("djhvbcdfhj");
 		while(result.next())
 		{
 			friendlist.put(result.getString("fromuser"),result.getString("notif"));
 			//System.out.println(result.getString("fromuser")+result.getString("notif"));
-		}		System.out.println("logidfsn");
+		}		//System.out.println("logidfsn");
 
 		request.setAttribute("username",username);
 		request.setAttribute("list",friendlist);
