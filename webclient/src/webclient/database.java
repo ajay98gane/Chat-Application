@@ -28,7 +28,7 @@ public class database {
 		createmtable.executeUpdate();
 		PreparedStatement createetable=con.prepareStatement("CREATE TABLE IF NOT EXISTS password(username TEXT,pass TEXT)");
 		createetable.executeUpdate();
-		PreparedStatement createmsgtable=con.prepareStatement("CREATE TABLE IF NOT EXISTS messages(id INT,msg TEXT)");
+		PreparedStatement createmsgtable=con.prepareStatement("CREATE TABLE IF NOT EXISTS messages(id INT,msg TEXT,timeat TIMESTAMP DEFAULT CURRENT_TIMESTAMP)");
 		createmsgtable.executeUpdate();
 		PreparedStatement createmaptable=con.prepareStatement("CREATE TABLE IF NOT EXISTS msgmap(fromuser TEXT,touser TEXT,notif INT DEFAULT '0',id INT PRIMARY KEY AUTO_INCREMENT)");
 		createmaptable.executeUpdate();

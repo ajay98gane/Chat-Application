@@ -5,7 +5,11 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.List;
+import java.util.Map;
 
 import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
@@ -23,6 +27,7 @@ import webclient.database;
 public class sendbox extends HttpServlet {
 protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 	List<String> messages=new ArrayList<String>();
+	List<String> time=new ArrayList<String>();
 	String to=request.getParameter("user");
 	String from=request.getParameter("from");
 	Connection con;
@@ -63,24 +68,30 @@ protected void doPost(HttpServletRequest request, HttpServletResponse response) 
 		}
 
 	}
-	PreparedStatement checkLogin=con.prepareStatement("SELECT msg,id FROM messages WHERE id='"+fromid+"' OR id='"+toid+"'");
+	PreparedStatement checkLogin=con.prepareStatement("SELECT msg,id,cast(timeat as time) FROM messages WHERE id='"+fromid+"' OR id='"+toid+"' ORDER BY timeat DESC LIMIT 20");
 	ResultSet result=checkLogin.executeQuery();
 	 while(result.next())
      {
-     	
+     		//System.out.println(result.getString("cast(timeat as time)")+result.getString("msg"));
 			if(result.getString("id").equals(fromid))
 			{
 				messages.add("{\"user\":\"0\",\"msg\":\""+result.getString("msg")+"\"}");
+				time.add(result.getString("cast(timeat as time)"));
 			}
 			else
 			{
 				messages.add("{\"user\":\"1\",\"msg\":\""+result.getString("msg")+"\"}");
+				time.add(result.getString("cast(timeat as time)"));
 
 			}
 			//System.out.println("{\"user\":\"1\",\"msg\":\""+result.getString("msg")+"\"}");
      }
+	 Collections.reverse(messages);
+	 Collections.reverse(time);
+	 
 	 request.setAttribute("to",to);
 	 request.setAttribute("msglist",messages);
+	 request.setAttribute("timelist",time);
      RequestDispatcher rd=request.getRequestDispatcher("sendtext.jsp");  
      rd.forward(request, response); 
 	

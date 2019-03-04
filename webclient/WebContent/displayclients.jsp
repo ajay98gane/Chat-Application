@@ -8,15 +8,12 @@
 <style>
 p {
 	background: #97cffb;
-	margin: auto;
+	margin: 0%;
 }
 
-div {
-	position: relative;
-	left: 300px;
-	background: #97cffb;
-	width
-	=50px;
+#users{
+
+left:25%;background: #97cffb;
 }
 
 button:hover {
@@ -27,14 +24,84 @@ button:hover {
 	transform: translateY(4px);
 }
 
-}
+ #searchbar{
+      position: absolute;
+    left: 25%;
+    top: 10%;
+    height: 50%;
+    width: 49.5%;}
+    #showfriend
+    {
+        position: absolute;
+    top: 0%;
+    left: 90%;}
+    #displayall
+    {
+     
+     position:absolute;
+     left:30%;
+     width:50%;
+     top:5%;
+     z-index:2;}
 body {
 	color: #0436af;
 	font-size: 20px;
 }
+span.from{
+display:inline-block;float:top;
+  
+ width:45%;overflow-wrap: break-word; white-space:normal;
+  height:auto;left:50%;position:relative;
+  margin:auto;text-align:right;margin-bottom:2%;
+}
+span.fromsub{
+background-color: #95cdfd;    padding-right: 20px;
+    padding-bottom: 10px;
+    }
+    span.tosub{
+    padding-right: 20px;
+    padding-bottom: 10px;    box-shadow: 0 0 0 2px #95cdfd;
+    }
+  span.to{
+  display:inline-block;position:relative;
+  left:5%;
+   max-width:50%;overflow-wrap: break-word;
+      
+  width:auto;
+  height:auto;margin:auto;
+  margin-bottom:2%;
+}
+#displayall
+{
+    left: 25%;
+    top: 110%;
+    width: 50%;
+    
+    background-color: #95cdfd;}
+  
+  #displaymsg{
+  overflow-y: scroll;
+  left:2%;
+  }
+  div.align{
+  position:relative;
+  left:0%;}
+  span.chattime{
+      font-size: 9px;
+    min-width: auto;
+    width: auto;
+    text-align: center;
+    margin-top: 6px;
+    padding-right: 4px;    position: absolute;
+    right: 0%;
+    top: 70%;}
+    #top{
+    position:relative;
+    background-color: #95cdfd;
+        margin-bottom: 1%;}
 </style>
 <meta charset="UTF-8">
-<title>available users</title>
+
 </head>
 <body bgcolor="#ccf5ff">
 	<script>
@@ -47,10 +114,31 @@ var tempuser="5jhgfd";
 window.user=tempuser;
 
 
+
 function wsSendMessage(msg){
+	<%System.out.println("checkdff");%>
+	
 	var object='{"to":"'+window.user+'","text":"'+msg+'","msg":"0","from":"'+id+'"}';
-	displaymsg.value+="\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t"+msg+"\n";
+	//console.log(object);
+	var span=document.createElement("span");
+	span.textContent=msg;
+	span.setAttribute('class','fromsub');
+	var spanmain=document.createElement("span");
+	spanmain.appendChild(span);
+	spanmain.setAttribute('class','from');
+	//var br=document.createElement("br");
+	//spanmain.innerHTML+="<br>";
+	var today=new Date();
+	var time = today.getHours() + ":" + today.getMinutes() + ":" + today.getSeconds();
+	var spantime=document.createElement("span");
+	spantime.textContent=time;
+	spantime.setAttribute('class','chattime');
+	spanmain.appendChild(spantime);
+	document.getElementById("displaymsg").appendChild(spanmain);
+	document.getElementById("displaymsg").innerHTML+="<br>";
 	webSocket.send(object);
+	 var element = document.getElementById("displaymsg");
+     element.scrollTop = element.scrollHeight;
 	textID.value="";
 	
 	
@@ -71,8 +159,26 @@ function wsGetMessage(message){
 			else
 			{ */
 				if((window.user.localeCompare(msg.from))==0)
-				{
-					displaymsg.value +=  msg.text + "\n"; 
+				{	
+					var span=document.createElement("span");
+					span.textContent=msg.text;
+					span.setAttribute('class','tosub');
+					var spanmain=document.createElement("span");
+					spanmain.appendChild(span);
+					spanmain.setAttribute('class','to');
+					var today=new Date();
+					var time = today.getHours() + ":" + today.getMinutes() + ":" + today.getSeconds();
+					var spantime=document.createElement("span");
+					spantime.setAttribute('class','chattime');
+
+					spantime.textContent=time;
+					spanmain.appendChild(spantime);
+					
+				
+					document.getElementById("displaymsg").appendChild(spanmain) ;
+					document.getElementById("displaymsg").innerHTML+="<br>";
+					 var element = document.getElementById("displaymsg");
+				      element.scrollTop = element.scrollHeight;
 				}
 				else
 				{
@@ -100,32 +206,40 @@ function wsSendFriendRequest(status,to)
 </script>
 
 
-	<p style="width: 200px; margin-left: 0px;">
+	<div id="top"><p style="width: 200px; ">
 		welcome
-		<%=id %><br>available users are
+		<%=id %>
 	</p>
+		<input type="text"  id="searchbar" name="name" onkeyup="searchInfo()"
+			autocomplete="off">
+			<div id="displayall"
+		></div>
+		
+			
+	
+	
 	<button id="showfriend" onclick="showFriendRequest()">show
 		friendrequest</button>
-	<br>
-	<form name="vinform">
-		<input type="text" name="name" onkeyup="searchInfo()"
-			autocomplete="off">
-	</form>
+	
+	</div>
+	<div id="bottom">
 	<form name='clients'
 		style="width: 200px; position: relative; right: 300px;">
 		<%for (Map.Entry<String,String> entry : userlist.entrySet()) { %>
-		<button type='button' name='clientlist' value='<%=entry.getKey()%>'
+	<div style="position:relative;">	<button type='button' name='clientlist' value='<%=entry.getKey()%>'
 			onclick='sendinfo(this.value)'
-			style="width: 216px; height: 50px; margin-left: 300px; background-color: #97cffb; box-shadow: 0px 0px 0 1px #147de8; margin-bottom: 10px; position: absolute; color: #0436af; font-size: 20px;"><%=entry.getKey()%></button>
+			style="width: 216px; height: 50px; margin-left: 300px; background-color: #97cffb; box-shadow: 0px 0px 0 1px #147de8; margin-bottom: 10px; position: relative; color: #0436af; font-size: 20px;"><%=entry.getKey()%></button>
 		<div id='<%= entry.getKey()%>'
-			style="width: 25px; height: 25px; left: 490px; right: 0px; position: relative; margin-bottom: 30px; bottom: -10px; background-color: #97cffb;"><%=(entry.getValue().equals("0"))?"": entry.getValue()%></div>
+			style="width: 25px; height: 25px; left: 490px; right: 0px; position: absolute; margin-bottom: 30px; bottom: -10px; background-color: #97cffb;"><%=(entry.getValue().equals("0"))?"": entry.getValue()%></div></div>
 		<%} %>
 
 	</form>
-	<br>
-	<a href='index.html'> logout</a>
-	<div id="users" style="position: absolute; top: 0px; width: 1500px;">user
+	
+	
+	<div id="users" style="position: absolute;z-index:1; top: 10%; width: 70%;">user
 		will be displayed here</div>
+				<div id="displayfriendrequest"></div>
+	<a href='index.html'> logout</a></div>
 	<script>
 function showvalue(str)
 {var xhttp; 
@@ -150,8 +264,18 @@ xhttp.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
   xhttp = new XMLHttpRequest();
   xhttp.onreadystatechange = function() {
     if (this.readyState == 4 && this.status == 200) {
+    	
+    
       document.getElementById("users").innerHTML = this.responseText;
       document.getElementById(window.user).innerHTML="";
+      var element = document.getElementById("displaymsg");
+      
+    	if (element!==null) 
+    		{
+      element.scrollTop = element.scrollHeight;
+    		}
+    	  
+
     }
   };
   xhttp.open("POST", "sendbox", true);
@@ -159,9 +283,10 @@ xhttp.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
 	xhttp.send(a);}</script>
 	<script>
 	function searchInfo()
-	{	var name=document.vinform.name.value;
+	{	var name=document.getElementById("searchbar").value;
 
 			var http;
+			
 			if(name == "")
 				{
 				document.getElementById("displayall").style.display="none";
@@ -222,9 +347,80 @@ xhttp.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
 				
 			
 		}
+		function  sendclick(e){
+		
+		
+		/* var input = document.getElementById("textID");
+		input.addEventListener("keyup", function(event) {
+			 */
+		
+		  if (e.keyCode === 13) {
+			 // console.log("jfk");
+		  
+		   event.preventDefault();
+		   document.getElementById("sendu").click();
+
+		 /*  } */
+		}
+		}
+		var i=0;
+		function scrollingfunction(tao)
+		{
+			var element=document.getElementById("displaymsg");
+			//console.log(element.scrollTop);
+			if(element.scrollTop==0)
+				{	console.log("check2");
+					i+=1;
+					var a="user="+tao+"&from=<%=id%>&no="+(i*20); 
+					xhttp = new XMLHttpRequest();
+					  xhttp.onreadystatechange = function() {
+					    if (this.readyState == 4 && this.status == 200) {
+					    	
+					    
+					       var elementa =document.createElement("div");
+					      console.log(this.responseText);
+					      //var textnode=document.createTextNode(this.responseText);
+					  	   elementa.innerHTML=this.responseText;
+					      var div = document.getElementById("secondtest");
+
+					      var divChildren = div.childNodes;
+					      //console.log(divChildren.length);
+					     // console.log(divChildren);
+	
+							  var j=0;
+							  while(j<divChildren.length){
+							 //console.log(j);
+							//console.log(div.childNodes.length);
+						     elementa.appendChild(divChildren[j]);
+						     //console.log(divChildren[j]);
+						    
+						  }
+						  document.getElementById("secondtest").innerHTML="";
+						  //(var k=0;k<elementa.childNodes.length;)
+						  var k=0;
+						  while(k<elementa.childNodes.length)
+							  {		console.log(k);
+						 			 document.getElementById("secondtest").appendChild((elementa.childNodes)[k]);
+							  }
+					      document.getElementById(window.user).innerHTML="";
+					      var element1 = document.getElementById("displaymsg"); 
+						      if(element1!=null&&(this.responseText.startsWith("<")))
+						    	  {
+						    	  	element1.scrollTop=element1.scrollHeight/(i+1);
+						    	  }
+
+					  }
+					  };
+					  xhttp.open("POST", "secondsend", true);
+					  xhttp.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
+						xhttp.send(a);
+						}
+					
+				}
+		
+				
+		
 	</script>
-	<div id="displayall"
-		style="position: absolute; left: 8px; top: 77px; width: 130px;"></div>
-	<div id="displayfriendrequest"></div>
+
 </body>
 </html>

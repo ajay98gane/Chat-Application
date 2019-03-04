@@ -28,7 +28,7 @@ public class websocket {
 	    String from=(String)message.get("from");
 	    String to=(String)message.get("to");
 	    Connection con=database.getConnection();
-	    System.out.println(((String)message.get("status")));
+	   // System.out.println(((String)message.get("status")));
 	    if(((String)message.get("msg")).equals("0"))
 	    {
 	    PreparedStatement getmap=con.prepareStatement("SELECT fromuser,touser,id FROM msgmap WHERE fromuser='"+from+"' AND touser='"+to+"'");
@@ -40,7 +40,7 @@ public class websocket {
 	    	num=mapresult.getString("id");
 
 	    }
-	    PreparedStatement storemessages=con.prepareStatement("INSERT INTO messages VALUES('"+num+"','"+(String)message.get("text")+"')");
+	    PreparedStatement storemessages=con.prepareStatement("INSERT INTO messages(id,msg) VALUES('"+num+"','"+(String)message.get("text")+"')");
 	    storemessages.executeUpdate();
 	    String send= "{\"from\":\""+from+"\",\"to\":\""+to+"\",\"text\":\""+(String)message.get("text")+"\",\"id\":\""+num+"\"}";
 		if(clientDetails.containsKey(to))
