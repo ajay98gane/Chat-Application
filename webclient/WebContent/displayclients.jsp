@@ -10,7 +10,13 @@ p {
 	background: #97cffb;
 	margin: 0%;
 }
-
+#usersa{
+    position: absolute;
+    z-index: 2;
+    width:70%;
+    left: 25%;
+    background-color: #93ccff;
+    top: 10%;}
 #users{
 
 left:25%;background: #97cffb;
@@ -32,9 +38,30 @@ button:hover {
     width: 49.5%;}
     #showfriend
     {
-        position: absolute;
-    top: 0%;
-    left: 90%;}
+           position: absolute;
+    top: 10%;
+    left: 80%;
+    color: #0030b2;
+    background-color: #95cdfd;
+    box-shadow: inset 0px 0px 1px 1px #63aaea;}
+    #logout{
+    
+           position: absolute;
+    top: 10%;
+    left: 90%;
+    color: #0030b2;
+    background-color: #95cdfd;
+    box-shadow: inset 0px 0px 1px 1px #63aaea;
+    }
+    
+    #displayfriendrequest
+    {
+    position: absolute;
+    left: 80%;
+    top: 8%;
+    z-index: 2;
+    background-color: #95cdfd;
+    }
     #displayall
     {
      
@@ -82,6 +109,12 @@ background-color: #95cdfd;    padding-right: 20px;
   #displaymsg{
   overflow-y: scroll;
   left:2%;
+  height:500px;
+  width:95%;
+  position:relative;
+  font-size: 20px;
+    background: #ccf5ff;
+    color: #0436af;
   }
   div.align{
   position:relative;
@@ -105,7 +138,7 @@ background-color: #95cdfd;    padding-right: 20px;
 </head>
 <body bgcolor="#ccf5ff">
 	<script>
-//console.log("script executed!!!");
+
 var id="<%=(String)request.getAttribute("username")%>";<% String id=(String)request.getAttribute("username");%>
 <%Map<String,String> userlist=(HashMap<String,String>)request.getAttribute("list");%>
  var webSocket = new WebSocket("ws://"+window.location.hostname+":8080/webclient/websocket/"+id);
@@ -220,8 +253,11 @@ function wsSendFriendRequest(status,to)
 	
 	<button id="showfriend" onclick="showFriendRequest()">show
 		friendrequest</button>
+		<button  id="logout" onclick="location.href='index.html'" >logout</button>
+		</div>
+		
 	
-	</div>
+	
 	<div id="bottom">
 	<form name='clients'
 		style="width: 200px; position: relative; right: 300px;">
@@ -236,11 +272,44 @@ function wsSendFriendRequest(status,to)
 	</form>
 	
 	
-	<div id="users" style="position: absolute;z-index:1; top: 10%; width: 70%;">user
-		will be displayed here</div>
+	<div id="users" style="position: absolute;z-index:1; top: 10%; width: 70%;">
+		</div>
 				<div id="displayfriendrequest"></div>
-	<a href='index.html'> logout</a></div>
-	<script>
+				<div id="usersa"></div>
+				</div>
+		<script>
+	window.onload = function(){
+		  var divToHide = document.getElementById('displayfriendrequest');
+		  document.onclick = function(e){console.log(e.target.id);
+			 if((e.target.id !== 'displayfriendrequest')&&(e.target.id!=='showfriend'))
+			    {
+			      divToHide.style.display = 'none';
+			    }
+		     if((e.target.id == 'displayfriendrequest')||(e.target.id =='showfriend'))
+		    	{
+		    	divToHide.style.display = 'block';
+
+		    	}
+		     if((e.target.id !== 'searchbar')&&(e.target.id!=='displayall'))
+		    	{
+		    		document.getElementById("displayall").style.display='none';
+		    	}
+		     if((e.target.id == 'searchbar')||(e.target.id=='displayall'))
+		    	{
+		    		document.getElementById("displayall").style.display='block';
+		    	}
+		     if((e.target.id !== 'usersa')&&(e.target.id !=='displayall')&&(e.target.className!=='availableusers'))
+		    	{	console.log(e.target.id);
+		    		document.getElementById("usersa").style.display='none';
+		    	}
+		     if((e.target.id == 'usersa')||(e.target.id=='displayall')||(e.target.className=='availableusers'))
+		    	{
+		    		document.getElementById("usersa").style.display='block';
+		    	}
+		     
+		  };
+		};
+
 function showvalue(str)
 {var xhttp; 
 
@@ -250,12 +319,14 @@ xhttp = new XMLHttpRequest();
 xhttp.onreadystatechange = function() {
   if (this.readyState == 4 && this.status == 200) {
     document.getElementById("usersa").innerHTML = this.responseText;
+    document.getElementById("displayall").style.display="none";
   }
 };
 xhttp.open("POST", "displaydetails", true);
 xhttp.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
 	xhttp.send(a);
-	}function sendinfo(str) {
+	}
+	function sendinfo(str) {
 	 window.user=str;
   var xhttp; 
   
@@ -287,14 +358,14 @@ xhttp.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
 
 			var http;
 			
-			if(name == "")
+			/* if(name == "")
 				{
 				document.getElementById("displayall").style.display="none";
 				}
 			else
 				{
 				document.getElementById("displayall").style.display="block";
-				}
+				} */
 			var senda="value="+name+"&from=<%=id%>";
 			http=new XMLHttpRequest();
 			http.onreadystatechange=function(){

@@ -4,7 +4,9 @@ import java.io.IOException;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import javax.servlet.RequestDispatcher;
@@ -29,6 +31,7 @@ public class displaydetails extends HttpServlet {
 				String from=request.getParameter("from");
 				Connection cona;
 				Map<String,String> userdetails=new HashMap<String,String>();
+				List<String> friends =new ArrayList<String>();
 				try {
 					cona = database.getConnection();
 				
@@ -44,6 +47,12 @@ public class displaydetails extends HttpServlet {
 					userdetails.put("emailid",displayresult.getString("emailid"));
 					userdetails.put("address",displayresult.getString("address"));
 					
+				}
+				PreparedStatement friendlist=cona.prepareStatement("select fromuser from msgmap where touser='"+user+"'");
+				ResultSet getfriends=friendlist.executeQuery();
+				while(getfriends.next())
+				{
+					friends.add(getfriends.getString("fromuser"));
 				}
 				PreparedStatement friendcheck=cona.prepareStatement("SELECT fromuser,touser FROM msgmap WHERE touser='"+from+"' AND fromuser='"+user+"'");
 				ResultSet friendchecka=friendcheck.executeQuery();
@@ -71,6 +80,7 @@ public class displaydetails extends HttpServlet {
 					request.setAttribute("bool",bool);
 					 request.setAttribute("userdetails",userdetails);
 					 request.setAttribute("to",user);
+					 request.setAttribute("friends",friends);
 				     RequestDispatcher rd=request.getRequestDispatcher("displaydetails.jsp");  
 				     rd.forward(request, response); 
 					}
@@ -80,6 +90,8 @@ public class displaydetails extends HttpServlet {
 						 request.setAttribute("bool",bool);
 						 request.setAttribute("userdetails",userdetails);
 						 request.setAttribute("to",user);
+						 request.setAttribute("friends",friends);
+
 					     RequestDispatcher rd=request.getRequestDispatcher("displaydetailscheck.jsp");  
 					     rd.forward(request, response); 
 					}
@@ -88,6 +100,8 @@ public class displaydetails extends HttpServlet {
 				 request.setAttribute("bool",bool);
 				 request.setAttribute("userdetails",userdetails);
 				 request.setAttribute("to",user);
+				 request.setAttribute("friends",friends);
+
 			     RequestDispatcher rd=request.getRequestDispatcher("displaydetailscheck.jsp");  
 			     rd.forward(request, response); 
 				}

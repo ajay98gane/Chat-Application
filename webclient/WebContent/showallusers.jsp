@@ -14,7 +14,7 @@ for(String s: msglist)
 {
 
 %>
-<button value="<%=s %>" onclick="showvalue(this.value)"><%=s %></button><br>
-<%} %><div id="usersa"></div>
+<div class='availableusers' onclick="showvalue('<%=s%>')"><%=s %></div><br>
+<%} %>
 </body>
 </html>

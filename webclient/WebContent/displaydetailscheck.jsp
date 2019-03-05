@@ -7,6 +7,7 @@
 <title>Insert title here</title>
 </head>
 <body>
+<p><%=(String)request.getAttribute("to") %></p>
 <%  Map<String,String> userdetails=(HashMap<String,String>)request.getAttribute("userdetails");
 for(Map.Entry<String,String> entry : userdetails.entrySet())
 {
@@ -16,5 +17,10 @@ for(Map.Entry<String,String> entry : userdetails.entrySet())
 	<%} %>
 	
 	<button value="<%=request.getAttribute("bool")%>" onclick="wsSendFriendRequest(this.value,'<%=(String)request.getAttribute("to")%>')"><%=request.getAttribute("bool")%></button>
+	<details><summary>friends</summary>
+	<%  List<String> friends=(ArrayList<String>)request.getAttribute("friends");
+	for(String fr:friends){%>
+	<p onclick="showvalue('<%=fr %>')"><%=fr %></p><%} %>
+	</details>
 </body>
 </html>
