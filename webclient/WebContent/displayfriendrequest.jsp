@@ -9,13 +9,13 @@
 <body>
 <div id=friendrequestdisplay>
 <%
-List<String> friendrequestlist=(ArrayList<String>)request.getAttribute("friendrequest");
+Map<Integer,String> friendrequestlist=(HashMap<Integer,String>)request.getAttribute("friendrequest");
 if(friendrequestlist!=null)
 {
 	
-for(String s:friendrequestlist)
+for(Map.Entry<Integer,String> s:friendrequestlist.entrySet())
 {
-	%><div id="<%=s %>"><%=s %><button value="<%=s %>" onclick="acceptrequest('1','<%=s%>')">accept request</button><button onclick="acceptrequest('0','<%=s%>')">reject request</button></div>
+	%><div id="<%=s.getKey() %>"><%=s.getValue() %><button value="<%=s.getKey() %>" onclick="acceptrequest('1',this.value)">accept request</button><button onclick="acceptrequest('0','<%=s.getKey()%>')">reject request</button></div>
 <% }}
 
 %></div>

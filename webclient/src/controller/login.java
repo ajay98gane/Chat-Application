@@ -21,7 +21,7 @@ public class login extends HttpServlet {
 //        doPost(request, response);
 //}
     
-	protected void service(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		
 		try {
 			HttpSession session = request.getSession();
@@ -34,15 +34,12 @@ public class login extends HttpServlet {
 		{
 			response.sendRedirect("login.html");
 		}
-		//response.sendRedirect("displayclients.jsp?id="+username);
-//		request.setAttribute("username",username);
-//        RequestDispatcher rd=request.getRequestDispatcher("userlist");  
-//        rd.forward(request, response);
-		System.out.println("login");
+		int uniqueid=Integer.parseInt(database.getUserId(username));
 		session.setAttribute("username",username);
+		session.setAttribute("userid",uniqueid);
+
 		response.sendRedirect("userlist");
 
-		//response.getWriter().println("loginsuccessful");
 		}catch(Exception e) {
 			e.printStackTrace();
 			System.out.println(e);

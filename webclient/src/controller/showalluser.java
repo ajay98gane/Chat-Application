@@ -5,7 +5,9 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
@@ -13,6 +15,7 @@ import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
 
 import webclient.database;
 
@@ -23,19 +26,14 @@ import webclient.database;
 public class showalluser extends HttpServlet {
 	private static final long serialVersionUID = 1L;
        
-	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		Connection cona;
-		List<String> availableusers=new ArrayList<String>(); 
+	protected void service(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+		
+		
 		try {
-			cona = database.getConnection();
-		String from=request.getParameter("from");
-		PreparedStatement showuser=cona.prepareStatement("SELECT username FROM storage WHERE username LIKE'"+request.getParameter("value")+"%' AND username <> '"+request.getParameter("from")+"'");
-		ResultSet r=showuser.executeQuery();
-		while(r.next())
-		{
-			availableusers.add(r.getString("username"));
-		}			
-
+			
+			Map<Integer,String> availableusers=new HashMap<Integer,String>(); 
+			int from=Integer.parseInt(request.getParameter("from"));
+			availableusers=(Map<Integer,String>)database.getAllUsers(request.getParameter("value"),from);
 		 request.setAttribute("listofusers",availableusers);
 		 request.setAttribute("from",from);
 	     RequestDispatcher rd=request.getRequestDispatcher("showallusers.jsp");  

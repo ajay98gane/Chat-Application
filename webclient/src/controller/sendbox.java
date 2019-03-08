@@ -17,7 +17,9 @@ import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
 
+import webclient.ListHolder;
 import webclient.database;
 
 /**
@@ -25,71 +27,32 @@ import webclient.database;
  */
 @WebServlet("/sendbox")
 public class sendbox extends HttpServlet {
-protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+protected void service(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+//	HttpSession s=request.getSession(false);
+//	if(s==null)
+//	{
+//		response.sendRedirect("pagenotfound.html");
+//	}
 	List<String> messages=new ArrayList<String>();
 	List<String> time=new ArrayList<String>();
-	String to=request.getParameter("user");
-	String from=request.getParameter("from");
-	Connection con;
+	int to=Integer.parseInt(request.getParameter("user"));
+	String toname=request.getParameter("username");
+	int from=Integer.parseInt(request.getParameter("from"));
 	try {
-		con = database.getConnection();
 	
-
-	PreparedStatement testmap=con.prepareStatement("SELECT fromuser,touser FROM msgmap WHERE fromuser='"+from+"'AND touser='"+to+"'");
-	ResultSet checkresult=testmap.executeQuery();
-	String check="";
-	while(checkresult.next())
-	{
-		check=checkresult.getString("fromuser");
-	}check=check.trim();
-	if(!check.equals(from))
-	{
-	PreparedStatement insertmap=con.prepareStatement("INSERT INTO msgmap(fromuser,touser) VALUES('"+from+"','"+to+"')");
-	insertmap.executeUpdate();
-	}
-	PreparedStatement clearnotif=con.prepareStatement("UPDATE msgmap SET notif='0' WHERE fromuser='"+to+"'AND touser='"+from+"' ");
-	clearnotif.executeUpdate();
-	PreparedStatement getmap=con.prepareStatement("SELECT fromuser,touser,id FROM msgmap WHERE (fromuser='"+from+"' OR fromuser= '"+to+"') AND (touser='"+from+"' OR touser='"+to+"')");
-	ResultSet mapresult=getmap.executeQuery();
-	String num="";
-	String tempFrom="";
-	String conf;
-	String fromid="";String toid="";
-	while(mapresult.next())
-	{
-		if(from.equals(mapresult.getString("fromuser")))
-		{
-		 
-		fromid=mapresult.getString("id")+"";
-		}
-		else
-		{
-		toid=mapresult.getString("id")+"";	
-		}
-
-	}
-	PreparedStatement checkLogin=con.prepareStatement("SELECT msg,id,cast(timeat as time) FROM messages WHERE id='"+fromid+"' OR id='"+toid+"' ORDER BY timeat DESC LIMIT 20");
-	ResultSet result=checkLogin.executeQuery();
-	 while(result.next())
-     {
-     		//System.out.println(result.getString("cast(timeat as time)")+result.getString("msg"));
-			if(result.getString("id").equals(fromid))
-			{
-				messages.add("{\"user\":\"0\",\"msg\":\""+result.getString("msg")+"\"}");
-				time.add(result.getString("cast(timeat as time)"));
-			}
-			else
-			{
-				messages.add("{\"user\":\"1\",\"msg\":\""+result.getString("msg")+"\"}");
-				time.add(result.getString("cast(timeat as time)"));
-
-			}
-			//System.out.println("{\"user\":\"1\",\"msg\":\""+result.getString("msg")+"\"}");
-     }
-	 Collections.reverse(messages);
+	String fromid=database.getId(from,to);
+	String toid=database.getId(to,from);
+	database.updateNotif(-1,toid);
+	
+	ListHolder lists=database.getMessagesAndTime(Integer.parseInt(fromid),Integer.parseInt(toid));
+	messages=lists.getMessages();
+	time=lists.getTime();
+	
+	Collections.reverse(messages);
 	 Collections.reverse(time);
 	 
 	 request.setAttribute("to",to);
+	 request.setAttribute("toname",toname);
 	 request.setAttribute("msglist",messages);
 	 request.setAttribute("timelist",time);
      RequestDispatcher rd=request.getRequestDispatcher("sendtext.jsp");  

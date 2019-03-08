@@ -1,0 +1,127 @@
+p {
+	background: #97cffb;
+	margin: 0%;
+}
+#usersa{
+    position: absolute;
+    z-index: 2;
+    width:70%;
+    left: 25%;
+    background-color: #93ccff;
+    top: 10%;}
+#users{
+
+left:25%;background: #97cffb;
+}
+
+button:hover {
+	filter: brightness(85%);
+}
+
+.button:active {
+	transform: translateY(4px);
+}
+
+ #searchbar{
+      position: absolute;
+    left: 25%;
+    top: 10%;
+    height: 50%;
+    width: 49.5%;}
+    #showfriend
+    {
+           position: absolute;
+    top: 10%;
+    left: 80%;
+    color: #0030b2;
+    background-color: #95cdfd;
+    box-shadow: inset 0px 0px 1px 1px #63aaea;}
+    #logout{
+    
+           position: absolute;
+    top: 10%;
+    left: 90%;
+    color: #0030b2;
+    background-color: #95cdfd;
+    box-shadow: inset 0px 0px 1px 1px #63aaea;
+    }
+    
+    #displayfriendrequest
+    {
+    position: absolute;
+    left: 80%;
+    top: 8%;
+    z-index: 2;
+    background-color: #95cdfd;
+    }
+    #displayall
+    {
+     
+     position:absolute;
+     left:30%;
+     width:50%;
+     top:5%;
+     z-index:2;}
+body {
+	color: #0436af;
+	font-size: 20px;
+}
+span.from{
+display:inline-block;float:top;
+  
+ width:45%;overflow-wrap: break-word; white-space:normal;
+  height:auto;left:50%;position:relative;
+  margin:auto;text-align:right;margin-bottom:2%;
+}
+span.fromsub{
+background-color: #95cdfd;    padding-right: 20px;
+    padding-bottom: 10px;
+    }
+    span.tosub{
+    padding-right: 20px;
+    padding-bottom: 10px;    box-shadow: 0 0 0 2px #95cdfd;
+    }
+  span.to{
+  display:inline-block;position:relative;
+  left:5%;
+   max-width:50%;overflow-wrap: break-word;
+      
+  width:auto;
+  height:auto;margin:auto;
+  margin-bottom:2%;
+}
+#displayall
+{
+    left: 25%;
+    top: 110%;
+    width: 50%;
+    
+    background-color: #95cdfd;
+    }
+  
+  #displaymsg{
+  overflow-y: scroll;
+  left:2%;
+  height:500px;
+  width:95%;
+  position:relative;
+  font-size: 20px;
+    background: #ccf5ff;
+    color: #0436af;
+  }
+  div.align{
+  position:relative;
+  left:0%;}
+  span.chattime{
+      font-size: 9px;
+    min-width: auto;
+    width: auto;
+    text-align: center;
+    margin-top: 6px;
+    padding-right: 4px;    position: absolute;
+    right: 0%;
+    top: 70%;}
+    #top{
+    position:relative;
+    background-color: #95cdfd;
+        margin-bottom: 1%;}

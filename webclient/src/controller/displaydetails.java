@@ -1,10 +1,7 @@
 package controller;
 
 import java.io.IOException;
-import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.util.ArrayList;
+
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -15,6 +12,7 @@ import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
 
 import webclient.database;
 
@@ -24,92 +22,59 @@ import webclient.database;
 @WebServlet("/displaydetails")
 public class displaydetails extends HttpServlet {
 	private static final long serialVersionUID = 1L;
-       
-   
-	protected void service(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-				String user=request.getParameter("user");
-				String from=request.getParameter("from");
-				Connection cona;
-				Map<String,String> userdetails=new HashMap<String,String>();
-				List<String> friends =new ArrayList<String>();
-				try {
-					cona = database.getConnection();
-				
-				PreparedStatement notifget=cona.prepareStatement("SELECT * FROM storage WHERE username='"+user+"'");
-				ResultSet displayresult=notifget.executeQuery();
-				String temporary="0";
-				int count=0;
-				while(displayresult.next())
-				{	 
-					userdetails.put("username",displayresult.getString("username"));
-					userdetails.put("name",displayresult.getString("name"));
-					userdetails.put("mobileno",displayresult.getString("mobileno"));
-					userdetails.put("emailid",displayresult.getString("emailid"));
-					userdetails.put("address",displayresult.getString("address"));
-					
-				}
-				PreparedStatement friendlist=cona.prepareStatement("select fromuser from msgmap where touser='"+user+"'");
-				ResultSet getfriends=friendlist.executeQuery();
-				while(getfriends.next())
-				{
-					friends.add(getfriends.getString("fromuser"));
-				}
-				PreparedStatement friendcheck=cona.prepareStatement("SELECT fromuser,touser FROM msgmap WHERE touser='"+from+"' AND fromuser='"+user+"'");
-				ResultSet friendchecka=friendcheck.executeQuery();
-				String bool="add friend";
-				boolean aa=true;
-				while(friendchecka.next())
-				{
-					bool="remove friend";
 
-				}
-				PreparedStatement friendrequestcheck=cona.prepareStatement("SELECT fromuser FROM friendrequest WHERE fromuser='"+from+"' OR fromuser='"+user+"'");
-				ResultSet friendrequestCheck=friendrequestcheck.executeQuery();
-				while(friendrequestCheck.next())
-				{	aa=false;
-				//System.out.println(friendrequestCheck.getString("fromuser"));
-				//System.out.println(user);
+	protected void doPost(HttpServletRequest request, HttpServletResponse response)
+			throws ServletException, IOException {
+//		HttpSession s=request.getSession(false);
+//		if(s==null)
+//		{
+//			response.sendRedirect("pagenotfound.html");
+//		}
+		int user = Integer.parseInt(request.getParameter("user"));
+		String username = request.getParameter("username");
+		String fromname = request.getParameter("fromname");
+		int from = Integer.parseInt(request.getParameter("from"));
+		Map<String, String> userdetails = new HashMap<String, String>();
+		Map<Integer, List<String>> friends = new HashMap<Integer, List<String>>();
 
-					if((friendrequestCheck.getString("fromuser")).equals(user))
-					{
-//						bool="cancel friend";
-//					}
-//					else
-//					{
-						bool="accept friend";
-					request.setAttribute("bool",bool);
-					 request.setAttribute("userdetails",userdetails);
-					 request.setAttribute("to",user);
-					 request.setAttribute("friends",friends);
-				     RequestDispatcher rd=request.getRequestDispatcher("displaydetails.jsp");  
-				     rd.forward(request, response); 
-					}
-					else
-					{
-						bool="cancel request";
-						 request.setAttribute("bool",bool);
-						 request.setAttribute("userdetails",userdetails);
-						 request.setAttribute("to",user);
-						 request.setAttribute("friends",friends);
+		try {
 
-					     RequestDispatcher rd=request.getRequestDispatcher("displaydetailscheck.jsp");  
-					     rd.forward(request, response); 
-					}
-				}if(aa==true)
-				{
-				 request.setAttribute("bool",bool);
-				 request.setAttribute("userdetails",userdetails);
-				 request.setAttribute("to",user);
-				 request.setAttribute("friends",friends);
+			userdetails = (HashMap<String, String>) database.getUserDetails(user);
 
-			     RequestDispatcher rd=request.getRequestDispatcher("displaydetailscheck.jsp");  
-			     rd.forward(request, response); 
-				}
-				
-				} catch (Exception e) {
-					
-					e.printStackTrace();
-				}
+			friends = (HashMap<Integer, List<String>>) database.getFriends(user);
+			System.out.println(from+""+user);
+
+			String bool = database.friendsCheck(from, user);
+			if (bool.equals("accept friend")) {
+				request.setAttribute("bool", bool);
+				request.setAttribute("toname", username);
+				request.setAttribute("userdetails", userdetails);
+				request.setAttribute("to", user);
+				request.setAttribute("friends", friends);
+				RequestDispatcher rd = request.getRequestDispatcher("displaydetails.jsp");
+				rd.forward(request, response);
+			} else if (bool.equals("cancel request")) {
+				request.setAttribute("bool", bool);
+				request.setAttribute("toname", username);
+				request.setAttribute("userdetails", userdetails);
+				request.setAttribute("to", user);
+				request.setAttribute("friends", friends);
+				RequestDispatcher rd = request.getRequestDispatcher("displaydetailscheck.jsp");
+				rd.forward(request, response);
+			} else {
+				request.setAttribute("bool", bool);
+				request.setAttribute("toname", username);
+				request.setAttribute("userdetails", userdetails);
+				request.setAttribute("to", user);
+				request.setAttribute("friends", friends);
+				RequestDispatcher rd = request.getRequestDispatcher("displaydetailscheck.jsp");
+				rd.forward(request, response);
+			}
+
+		} catch (Exception e) {
+
+			e.printStackTrace();
+		}
 
 	}
 

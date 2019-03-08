@@ -12,6 +12,8 @@ import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
+
 import webclient.database;
 
 
@@ -20,6 +22,11 @@ public class displayinfo extends HttpServlet {
 	private static final long serialVersionUID = 1L;
     
 	protected void service(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+//		HttpSession s=request.getSession(false);
+//		if(s==null)
+//		{
+//			response.sendRedirect("pagenotfound.html");
+//		}
 		try {
 			
 			String user=request.getParameter("user");

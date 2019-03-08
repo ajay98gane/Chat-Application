@@ -6,8 +6,8 @@
 <meta charset="UTF-8">
 <title>Insert title here</title>
 </head>
-<body>
-<p><%=(String)request.getAttribute("to") %></p>
+<body class='availableusers'>
+<p><%=(String)request.getAttribute("toname") %></p>
 <%  Map<String,String> userdetails=(HashMap<String,String>)request.getAttribute("userdetails");
 for(Map.Entry<String,String> entry : userdetails.entrySet())
 {
@@ -16,11 +16,11 @@ for(Map.Entry<String,String> entry : userdetails.entrySet())
 	%><%= entry.getKey() %>:<%= entry.getValue() %><br>
 	<%} %>
 	
-	<button value="<%=request.getAttribute("bool")%>" onclick="wsSendFriendRequest(this.value,'<%=(String)request.getAttribute("to")%>')"><%=request.getAttribute("bool")%></button>
-	<details><summary>friends</summary>
-	<%  List<String> friends=(ArrayList<String>)request.getAttribute("friends");
-	for(String fr:friends){%>
-	<p onclick="showvalue('<%=fr %>')"><%=fr %></p><%} %>
+	<button class='availableusers'value="<%=request.getAttribute("bool")%>" onclick="wsSendFriendRequest(this.value,'<%=(Integer)request.getAttribute("to")%>')"><%=request.getAttribute("bool")%></button>
+	<details class='availableusers'><summary class='availableusers'>friends</summary>
+	<%  Map<Integer,List<String>> friends=(HashMap<Integer,List<String>>)request.getAttribute("friends");
+	for(Map.Entry<Integer,List<String>> entry:friends.entrySet()){%>
+	<p class='availableusers'onclick="showvalue('<%=entry.getKey() %>','<%= entry.getValue().get(0) %>')"><%=entry.getValue().get(0) %></p><%} %>
 	</details>
 </body>
 </html>

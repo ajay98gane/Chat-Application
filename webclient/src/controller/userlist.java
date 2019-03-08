@@ -5,6 +5,7 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import javax.servlet.RequestDispatcher;
@@ -22,31 +23,26 @@ import webclient.database;
 public class userlist extends HttpServlet {
 
 	protected void service(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		Map<String,String> friendlist=new HashMap<String,String>();
-		HttpSession session = request.getSession();
-		//ServletContext context=getServletContext();
+		Map<Integer,List<String>> friendlist=new HashMap<Integer,List<String>>();
+		HttpSession session = request.getSession(false);
+//		if(session==null)
+//		{
+//			response.sendRedirect("pagenotfound.html");
+//		}
 		String username=(String)session.getAttribute("username");
-		Connection con;
+		int userId=((Integer)session.getAttribute("userid"));
 		try {
-			con = database.getConnection();
 		
-		PreparedStatement checkLogin=con.prepareStatement("SELECT fromuser,notif FROM msgmap WHERE touser= '"+username+"'");
-		ResultSet result=checkLogin.executeQuery();
-		//System.out.println("djhvbcdfhj");
-		while(result.next())
-		{
-			friendlist.put(result.getString("fromuser"),result.getString("notif"));
-			//System.out.println(result.getString("fromuser")+result.getString("notif"));
-		}		//System.out.println("logidfsn");
-
+			friendlist=(HashMap<Integer,List<String>>)database.getFriends(userId);
 		request.setAttribute("username",username);
+		request.setAttribute("userid",userId);
 		request.setAttribute("list",friendlist);
         RequestDispatcher rd=request.getRequestDispatcher("displayclients.jsp");  
         rd.forward(request, response); 
 		} catch (Exception e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
-		}
+		} 
+	
 		
 	}
 

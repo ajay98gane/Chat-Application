@@ -7,14 +7,13 @@
 <title>Insert title here</title>
 </head>
 <body>
-
 <%
-List<String> msglist=(ArrayList<String>)request.getAttribute("listofusers");
-for(String s: msglist)
+Map<Integer,String> msglist=(HashMap<Integer,String>)request.getAttribute("listofusers");
+for(Map.Entry<Integer,String> s: msglist.entrySet())
 {
 
 %>
-<div class='availableusers' onclick="showvalue('<%=s%>')"><%=s %></div><br>
+<div class='availableusers' onclick="showvalue('<%=s.getKey() %>','<%=s.getValue() %>')"><%=s.getValue() %></div><br>
 <%} %>
 </body>
 </html>

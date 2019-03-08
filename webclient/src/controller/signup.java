@@ -2,6 +2,8 @@ package controller;
 
 
 import java.io.IOException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 
 import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletContext;
@@ -25,7 +27,7 @@ public class signup extends HttpServlet {
 //        doPost(request, response);
 //}
    
-	protected void service(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		try {
 			HttpSession session = request.getSession();
 			//ServletContext context=getServletContext();
@@ -43,13 +45,14 @@ public class signup extends HttpServlet {
 			response.sendRedirect("signup.html");
 		}
 		String newpass=password.hashCode()+"";
-		database.addValueInfoTable(username,newpass,name,mobileno,emailid,address);
-		//response.getWriter().println(username);
-		//response.sendRedirect("displayclients.jsp?id="+username);
-//		request.setAttribute("username",username);
-//        RequestDispatcher rd=request.getRequestDispatcher("userlist"); 
-//        rd.forward(request, response); 
+		String timeStamp = new SimpleDateFormat("yyyy.MM.dd.HH.mm.ss").format(new Date());
+
+		String uniqueUserId="user_"+username+timeStamp;
+		int uniqueid=uniqueUserId.hashCode();
+		database.addValueInfoTable(uniqueid,username,newpass,name,mobileno,emailid,address);
+ 
 		session.setAttribute("username",username);
+		session.setAttribute("userid",uniqueid);
 
 		response.sendRedirect("userlist");
 		System.out.println("logidfsn");
