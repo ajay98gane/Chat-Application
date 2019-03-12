@@ -12,8 +12,6 @@ import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import javax.servlet.http.HttpSession;
-
 import webclient.database;
 
 /**
@@ -25,11 +23,7 @@ public class displaydetails extends HttpServlet {
 
 	protected void doPost(HttpServletRequest request, HttpServletResponse response)
 			throws ServletException, IOException {
-//		HttpSession s=request.getSession(false);
-//		if(s==null)
-//		{
-//			response.sendRedirect("pagenotfound.html");
-//		}
+
 		int user = Integer.parseInt(request.getParameter("user"));
 		String username = request.getParameter("username");
 		String fromname = request.getParameter("fromname");
@@ -38,7 +32,6 @@ public class displaydetails extends HttpServlet {
 		Map<Integer, List<String>> friends = new HashMap<Integer, List<String>>();
 		Map<Integer, List<String>> group = new HashMap<Integer, List<String>>();
 		Map<Integer,List<String>> groupusers;
-		Map<Integer,String> friendsnotingroup;
 
 		try {
 			boolean groupcheck = database.checkGroup(user);
@@ -70,7 +63,6 @@ public class displaydetails extends HttpServlet {
 			{
 				groupusers=(HashMap<Integer,List<String>>)database.getGroupUserDetails(user,from);
 				boolean adminAccess=database.checkAdminAccess(from,user);
-			//	friendsnotingroup=database.friendsNotInGroup(from,user);
 				request.setAttribute("toname", username);
 				request.setAttribute("userdetails", groupusers);
 				request.setAttribute("to", user);
@@ -79,7 +71,6 @@ public class displaydetails extends HttpServlet {
 				RequestDispatcher rd;
 				if(adminAccess==true)
 				{	
-					//request.setAttribute("friendsnotingrup",friendsnotingroup);
 					rd=request.getRequestDispatcher("displaygroupdetailsadmin.jsp");
 				}
 				else

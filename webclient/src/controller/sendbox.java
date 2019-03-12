@@ -1,24 +1,15 @@
 package controller;
 
 import java.io.IOException;
-import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
 import java.util.ArrayList;
 import java.util.Collections;
-import java.util.HashMap;
-import java.util.LinkedHashMap;
 import java.util.List;
-import java.util.Map;
-
 import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import javax.servlet.http.HttpSession;
-
 import webclient.ListHolder;
 import webclient.NestedListHolder;
 import webclient.database;
@@ -28,13 +19,12 @@ import webclient.database;
  */
 @WebServlet("/sendbox")
 public class sendbox extends HttpServlet {
+	
+	private static final long serialVersionUID = 1L;
+
 	protected void service(HttpServletRequest request, HttpServletResponse response)
 			throws ServletException, IOException {
-//	HttpSession s=request.getSession(false);
-//	if(s==null)
-//	{
-//		response.sendRedirect("pagenotfound.html");
-//	}
+
 		List<String> messages = new ArrayList<String>();
 		List<String> time = new ArrayList<String>();
 		int to = Integer.parseInt(request.getParameter("user"));
@@ -46,7 +36,6 @@ public class sendbox extends HttpServlet {
 
 			String fromid = database.getId(from, to);
 			int toid = Integer.parseInt(database.getId(to, from));
-			System.out.println(toid);
 			database.updateNotif(-1, toid);
 
 			if ((!fromid.equals(""))) {
@@ -84,7 +73,7 @@ public class sendbox extends HttpServlet {
 				RequestDispatcher rd;
 				if (no == null) {
 					rd = request.getRequestDispatcher("groupsentext.jsp");
-				} else {System.out.println("shgfodjgojaofdjo");
+				} else {
 					rd = request.getRequestDispatcher("grouploadtext.jsp");
 				}
 				rd.forward(request, response);

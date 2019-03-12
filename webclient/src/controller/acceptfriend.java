@@ -6,7 +6,6 @@ import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import javax.servlet.http.HttpSession;
 
 import webclient.database;
 
@@ -18,12 +17,7 @@ public class acceptfriend extends HttpServlet {
 	private static final long serialVersionUID = 1L;
   
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-//		HttpSession s=request.getSession(false);
-//		if(s==null)
-//		{
-//			response.sendRedirect("pagenotfound.html");
-//		}
-		
+
 		int from=Integer.parseInt(request.getParameter("from"));
 		int to=Integer.parseInt(request.getParameter("to"));
 		String num=request.getParameter("num");

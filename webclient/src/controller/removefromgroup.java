@@ -23,7 +23,6 @@ public class removefromgroup extends HttpServlet {
 		database.removefromgroup(userid,groupid);
 		response.sendRedirect("userlist");
 	} catch (Exception e) {
-		// TODO Auto-generated catch block
 		e.printStackTrace();
 	}
 		

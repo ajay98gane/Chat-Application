@@ -35,7 +35,6 @@ public class changeadminstatus extends HttpServlet {
 		try {
 			database.changeAdminAccess(fromid,groupid,bool);
 		} catch (Exception e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 	}

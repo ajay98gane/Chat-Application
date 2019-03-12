@@ -22,7 +22,6 @@ public class deletefromgroup extends HttpServlet {
 			database.deletegroup(groupid);
 			response.sendRedirect("userlist");
 		} catch (Exception e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 		
