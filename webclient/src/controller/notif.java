@@ -19,20 +19,18 @@ import webclient.database;
 public class notif extends HttpServlet {
 	
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-//		HttpSession s=request.getSession(false);
-//		if(s==null)
-//		{
-//			response.sendRedirect("pagenotfound.html");
-//		}
+
 		try {
-			String temporary=database.getNotif(request.getParameter("uniqueid"));
+			int from=Integer.parseInt(request.getParameter("from"));
+			int to=Integer.parseInt(request.getParameter("to"));
+			int no=Integer.parseInt(database.getId(from,to));
+			String temporary=database.getNotif(no);
 			int count=0;
 			if(temporary!=null)
 			{
 				count=Integer.parseInt(temporary);
 			}
-			System.out.println("from notif"+count);
-		database.updateNotif(count,request.getParameter("uniqueid"));
+		database.updateNotif(count,no);
 		response.getWriter().print(++count);
 		} catch (Exception e) {
 			

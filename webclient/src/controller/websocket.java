@@ -32,37 +32,62 @@ public class websocket {
 		if (((String) message.get("msg")).equals("0")) {
 
 			String num = database.getId(from, to);
-			database.insertMessages(num, (String) message.get("text"));
+			if (num.equals("")) {
+				num = database.getId(to, from);
+			}
+
+			database.insertMessages(Integer.parseInt(num), (String) message.get("text"));
 
 			String send = "{\"from\":\"" + from + "\",\"to\":\"" + to + "\",\"text\":\"" + (String) message.get("text")
-					+ "\",\"id\":\"" + num + "\"}";
-			System.out.println("to"+to);
-			if (clientDetails.containsKey(to+"")) {
-				Session s = clientDetails.get(to+"");
+					+ "\",\"id\":\"" + num + "\",\"fromname\":\"" + (String) message.get("fromname") + "\"";
+			boolean groupCheck = database.checkGroup(to);
+			if (groupCheck == true) {
+				Map<Integer, List<String>> groupusers = database.getGroupUserDetails(to, from);
+				send = send + ",\"group\":\"true\"}";
+				for (Map.Entry<Integer, List<String>> a : groupusers.entrySet()) {
+					if (clientDetails.containsKey(a.getKey()+"")) {
+						Session s = clientDetails.get(a.getKey()+"");
+						if (s.isOpen()) {
+							s.getBasicRemote().sendText(send);
+						} else {
+							int no = Integer.parseInt(database.getId(to, (a.getKey())));
+							String temporary = database.getNotif(no);
+							int count = 0;
+							if (temporary != null) {
+								count = Integer.parseInt(temporary);
+							}
+							database.updateNotif(count, no);
+						}
+					} else {
+						int no = Integer.parseInt(database.getId(to,(a.getKey())));
+						String temporary = database.getNotif(no);
+						int count = 0;
+						if (temporary != null) {
+							count = Integer.parseInt(temporary);
+						}
+						database.updateNotif(count, no);
+					}
+
+				}
+			}
+			if (clientDetails.containsKey(to + "")) {
+				Session s = clientDetails.get(to + "");
 				if (s.isOpen()) {
+					send = send + ",\"group\":\"false\"}";
+
 					s.getBasicRemote().sendText(send);
 				} else {
-					String temporary = database.getNotif(num);
+					String temporary = database.getNotif(Integer.parseInt(num));
 					int count = 0;
 					if (temporary != null) {
 						count = Integer.parseInt(temporary);
 					}
-					database.updateNotif(count, num);
+					database.updateNotif(count, Integer.parseInt(num));
 				}
 
 			}
 		} else if (((String) message.get("status")).equalsIgnoreCase("add friend")) {
-			String sen = "{\"from\":\"" + from + "\",\"to\":\"" + to + "\",\"text\":\"" + (String) message.get("status")
-					+ "\",\"id\":\"@\"}";
-
 			database.sendFriendRequest(from, to);
-			if (clientDetails.containsKey(to)) {
-				Session s = clientDetails.get(to);
-				if (s.isOpen()) {
-					s.getBasicRemote().sendText(sen);
-				}
-
-			}
 		} else if (((String) message.get("status")).equalsIgnoreCase("remove friend")) {
 			database.removeFriend(from, to);
 		} else if (((String) message.get("status")).equalsIgnoreCase("accept friend")) {

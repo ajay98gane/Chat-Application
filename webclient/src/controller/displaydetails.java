@@ -36,39 +36,58 @@ public class displaydetails extends HttpServlet {
 		int from = Integer.parseInt(request.getParameter("from"));
 		Map<String, String> userdetails = new HashMap<String, String>();
 		Map<Integer, List<String>> friends = new HashMap<Integer, List<String>>();
+		Map<Integer, List<String>> group = new HashMap<Integer, List<String>>();
+		Map<Integer,List<String>> groupusers;
+		Map<Integer,String> friendsnotingroup;
 
 		try {
+			boolean groupcheck = database.checkGroup(user);
+			if (groupcheck == false) {
+				userdetails = (HashMap<String, String>) database.getUserDetails(user);
 
-			userdetails = (HashMap<String, String>) database.getUserDetails(user);
-
-			friends = (HashMap<Integer, List<String>>) database.getFriends(user);
-			System.out.println(from+""+user);
-
-			String bool = database.friendsCheck(from, user);
-			if (bool.equals("accept friend")) {
+				friends = (HashMap<Integer, List<String>>) database.getFriends(user);
+				group=(HashMap<Integer, List<String>>) database.getGroup(user);
+				String bool = database.friendsCheck(from, user);
 				request.setAttribute("bool", bool);
 				request.setAttribute("toname", username);
 				request.setAttribute("userdetails", userdetails);
 				request.setAttribute("to", user);
+				request.setAttribute("group",group);
 				request.setAttribute("friends", friends);
-				RequestDispatcher rd = request.getRequestDispatcher("displaydetails.jsp");
+				RequestDispatcher rd;
+				if (bool.equals("accept friend")) {
+					rd = request.getRequestDispatcher("displaydetails.jsp");
+
+				} else if (bool.equals("cancel request")) {
+					rd = request.getRequestDispatcher("displaydetailscheck.jsp");
+				} else {
+
+					rd = request.getRequestDispatcher("displaydetailscheck.jsp");
+				}
 				rd.forward(request, response);
-			} else if (bool.equals("cancel request")) {
-				request.setAttribute("bool", bool);
+			}
+			else
+			{
+				groupusers=(HashMap<Integer,List<String>>)database.getGroupUserDetails(user,from);
+				boolean adminAccess=database.checkAdminAccess(from,user);
+			//	friendsnotingroup=database.friendsNotInGroup(from,user);
 				request.setAttribute("toname", username);
-				request.setAttribute("userdetails", userdetails);
+				request.setAttribute("userdetails", groupusers);
 				request.setAttribute("to", user);
-				request.setAttribute("friends", friends);
-				RequestDispatcher rd = request.getRequestDispatcher("displaydetailscheck.jsp");
-				rd.forward(request, response);
-			} else {
-				request.setAttribute("bool", bool);
-				request.setAttribute("toname", username);
-				request.setAttribute("userdetails", userdetails);
-				request.setAttribute("to", user);
-				request.setAttribute("friends", friends);
-				RequestDispatcher rd = request.getRequestDispatcher("displaydetailscheck.jsp");
-				rd.forward(request, response);
+				request.setAttribute("from",from);
+				request.setAttribute("fromname",fromname);
+				RequestDispatcher rd;
+				if(adminAccess==true)
+				{	
+					//request.setAttribute("friendsnotingrup",friendsnotingroup);
+					rd=request.getRequestDispatcher("displaygroupdetailsadmin.jsp");
+				}
+				else
+				{
+					rd=request.getRequestDispatcher("displaygroupdetails.jsp");
+				}
+				rd.forward(request,response);
+						
 			}
 
 		} catch (Exception e) {

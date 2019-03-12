@@ -41,23 +41,7 @@ public class secondsend extends HttpServlet {
 		ListHolder lists=database.getMessagesAndTime(Integer.parseInt(fromid),Integer.parseInt(toid),no);
 		messages=lists.getMessages();
 		time=lists.getTime();
-	
-//	PreparedStatement checkLogin=con.prepareStatement("SELECT msg,id,cast(timeat as time) FROM messages WHERE id='"+fromid+"' OR id='"+toid+"' ORDER BY timeat DESC LIMIT 20 OFFSET "+no);
-//	ResultSet result=checkLogin.executeQuery();		 
-//	while(result.next())
-//	     {
-//				if(result.getString("id").equals(fromid))
-//				{
-//					messages.add("{\"user\":\"0\",\"msg\":\""+result.getString("msg")+"\"}");
-//					time.add(result.getString("cast(timeat as time)"));
-//				}
-//				else
-//				{
-//					messages.add("{\"user\":\"1\",\"msg\":\""+result.getString("msg")+"\"}");
-//					time.add(result.getString("cast(timeat as time)"));
-//
-//				}
-//	     }
+
 		Collections.reverse(messages);
 		Collections.reverse(time);
 		 request.setAttribute("to",to);

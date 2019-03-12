@@ -22,28 +22,31 @@ import webclient.database;
 @WebServlet("/userlist")
 public class userlist extends HttpServlet {
 
-	protected void service(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		Map<Integer,List<String>> friendlist=new HashMap<Integer,List<String>>();
+	protected void service(HttpServletRequest request, HttpServletResponse response)
+			throws ServletException, IOException {
+		Map<Integer, List<String>> friendlist = new HashMap<Integer, List<String>>();
+		Map<Integer, List<String>> grouplist = new HashMap<Integer, List<String>>();
 		HttpSession session = request.getSession(false);
 //		if(session==null)
 //		{
 //			response.sendRedirect("pagenotfound.html");
 //		}
-		String username=(String)session.getAttribute("username");
-		int userId=((Integer)session.getAttribute("userid"));
+		String username = (String) session.getAttribute("username");
+		int userId = ((Integer) session.getAttribute("userid"));
 		try {
-		
-			friendlist=(HashMap<Integer,List<String>>)database.getFriends(userId);
-		request.setAttribute("username",username);
-		request.setAttribute("userid",userId);
-		request.setAttribute("list",friendlist);
-        RequestDispatcher rd=request.getRequestDispatcher("displayclients.jsp");  
-        rd.forward(request, response); 
+
+			friendlist = (HashMap<Integer, List<String>>) database.getFriends(userId);
+			grouplist = (HashMap<Integer, List<String>>) database.getGroup(userId);
+			request.setAttribute("username", username);
+			request.setAttribute("userid", userId);
+			request.setAttribute("list", friendlist);
+			request.setAttribute("grouplist", grouplist);
+			RequestDispatcher rd = request.getRequestDispatcher("displayclients.jsp");
+			rd.forward(request, response);
 		} catch (Exception e) {
 			e.printStackTrace();
-		} 
-	
-		
+		}
+
 	}
 
 }

@@ -22,5 +22,11 @@ for(Map.Entry<String,String> entry : userdetails.entrySet())
 	for(Map.Entry<Integer,List<String>> entry:friends.entrySet()){%>
 	<p class='availableusers'onclick="showvalue('<%=entry.getKey() %>','<%= entry.getValue().get(0) %>')"><%=entry.getValue().get(0) %></p><%} %>
 	</details>
+	<details class='availableusers'><summary class='availableusers'>group</summary>
+	<%  Map<Integer,List<String>> group=(HashMap<Integer,List<String>>)request.getAttribute("group");
+	for(Map.Entry<Integer,List<String>> entry:group.entrySet()){%>
+	<p  class='availableusers' onclick="showvalue('<%=entry.getKey() %>','<%= entry.getValue().get(0) %>')"><%=entry.getValue().get(0) %></p><%}
+	%>
+	</details>
 </body>
 </html>
