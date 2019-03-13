@@ -26,12 +26,12 @@ public class createnewgroup extends HttpServlet {
 		//String test=request.getParameter("test");
 		String groupName=request.getParameter("groupname");
 		int from=Integer.parseInt(request.getParameter("from"));
-		String to=(request.getParameter("groupid"));
+		String to=request.getParameter("groupid");
 		String fromname=request.getParameter("fromname");
 		try {
 			Map<Integer,List<String>> friendlist;
 			int uniqGroupId;
-		if(to!=null)
+		if(!to.equals("undefined"))
 		{		
 			uniqGroupId=Integer.parseInt(to);
 			friendlist=database.friendsNotInGroup(from,Integer.parseInt(to));

@@ -22,7 +22,6 @@ public class userlist extends HttpServlet {
 		Map<Integer, List<String>> friendlist = new HashMap<Integer, List<String>>();
 		Map<Integer, List<String>> grouplist = new HashMap<Integer, List<String>>();
 		HttpSession session = request.getSession(false);
-//
 		String username = (String) session.getAttribute("username");
 		int userId = ((Integer) session.getAttribute("userid"));
 		try {

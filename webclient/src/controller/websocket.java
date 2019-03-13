@@ -1,12 +1,8 @@
 package controller;
 
 import java.io.IOException;
-import java.sql.*;
 import java.util.*;
 import org.json.*;
-//import org.json.JSONValue;
-//import org.json.simple.JSONValue; 
-
 import javax.websocket.*;
 import webclient.database;
 import javax.websocket.server.PathParam;
@@ -28,7 +24,6 @@ public class websocket {
 		JSONObject message = new JSONObject(msg);
 		int from = Integer.parseInt((String) message.get("from"));
 		int to = Integer.parseInt((String) message.get("to"));
-		Connection con = database.getConnection();
 		if (((String) message.get("msg")).equals("0")) {
 
 			String num = database.getId(from, to);

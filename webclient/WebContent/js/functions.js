@@ -3,9 +3,7 @@ function response(sendto, params, callback) {
 
 	xhttp.onreadystatechange = function() {
 		if (xhttp.readyState == 4 && xhttp.status == 200) {
-			// console.log("a");
 			callback();
-			// console.log("b");
 
 		}
 	};
@@ -27,8 +25,9 @@ function wsSendMessage(msg) {
 		spanmain.setAttribute('class', 'from');
 
 		var today = new Date();
-		var time = today.getHours() + ":" + today.getMinutes() + ":"
-				+ today.getSeconds();
+		// var time = today.getHours() + ":" + today.getMinutes() + ":"
+		// + today.getSeconds();
+		var time = today.toLocaleTimeString();
 		var spantime = document.createElement("span");
 		spantime.textContent = time;
 		spantime.setAttribute('class', 'fromchattime');
@@ -47,9 +46,7 @@ function wsGetMessage(message) {
 	var a = message.data;
 
 	var msg = JSON.parse(a);
-	console.log(msg.group);
 	if (msg.group == "true") {
-		console.log(msg.to + " " + window.user);
 		if (window.user == msg.to) {
 			var spanfrom = document.createElement("span");
 			spanfrom.textContent = msg.fromname;
@@ -62,8 +59,9 @@ function wsGetMessage(message) {
 			spanmain.appendChild(span);
 			spanmain.setAttribute('class', 'to');
 			var today = new Date();
-			var time = today.getHours() + ":" + today.getMinutes() + ":"
-					+ today.getSeconds();
+			// var time = today.getHours() + ":" + today.getMinutes() + ":"
+			// + today.getSeconds();
+			var time = today.toLocaleTimeString();
 			var spantime = document.createElement("span");
 			spantime.setAttribute('class', 'tochattime');
 
@@ -89,8 +87,10 @@ function wsGetMessage(message) {
 			spanmain.appendChild(span);
 			spanmain.setAttribute('class', 'to');
 			var today = new Date();
-			var time = today.getHours() + ":" + today.getMinutes() + ":"
-					+ today.getSeconds();
+			// var time = today.getHours() + ":" + today.getMinutes() + ":"
+			// + today.getSeconds();
+			var time = today.toLocaleTimeString();
+
 			var spantime = document.createElement("span");
 			spantime.setAttribute('class', 'tochattime');
 
@@ -119,7 +119,6 @@ function wsSendFriendRequest(status, to) {
 
 function showvalue(str, toname) {
 
-	// var a="user="+str+"&from="+id;
 	var a = "user=" + str + "&from=" + id + "&fromname=" + name + "&username="
 			+ toname;
 
@@ -133,11 +132,9 @@ function showvalue(str, toname) {
 function sendinfo(str, toname) {
 	window.user = str;
 
-	console.log("clicked user" + str);
 	var a = "user=" + str + "&from=" + id + "&fromname=" + name + "&username="
 			+ toname;
 	function scrolldown() {
-		// console.log("kjf");
 		document.getElementById("users").innerHTML = xhttp.responseText;
 		var element = document.getElementById("displaymsg");
 		if (element !== null) {
@@ -155,7 +152,15 @@ function searchInfo() {
 	function respons() {
 		document.getElementById("displayall").innerHTML = xhttp.responseText;
 	}
-	response("showalluser", senda, respons);
+	if (name != "") {
+			
+		document.getElementById("displayall").style.display="block";
+		response("showalluser", senda, respons);
+	}
+	else
+		{
+		document.getElementById("displayall").style.display="none";
+		}
 
 }
 function showFriendRequest() {
@@ -215,7 +220,6 @@ function scrollingfunction(userid, username) {
 			document.getElementById(window.user).innerHTML = "";
 			var element1 = document.getElementById("displaymsg");
 			if (element1 != null && (xhttp.responseText.startsWith("<"))) {
-				// console.log(xhttp.responseText);
 				element1.scrollTop = element1.scrollHeight / (i + 1);
 			}
 
@@ -227,10 +231,12 @@ function scrollingfunction(userid, username) {
 }
 function createnewgroup() {
 	var a = "from=" + id;
-	function respons() {
-		document.getElementById("usersa").innerHTML = xhttp.responseText;
+	if (from != "") {
+		function respons() {
+			document.getElementById("usersa").innerHTML = xhttp.responseText;
+		}
+		response("createnewgroup.jsp", a, respons);
 	}
-	response("createnewgroup.jsp", a, respons);
 
 }
 function newGroupUser(groupname, groupid) {
@@ -256,16 +262,25 @@ function changeadminstatus(str, fromid, groupid, clickid) {
 		access = "admin"
 	}
 	function respons() {
-		// var elem = document.getElementById("groupadminaccess");
-		document.getElementsByName(clickid).item(0).innerHTML = access;
-		document.getElementsByName(clickid).item(0).value = access;
+		document.getElementsByClasses(clickid).item(0).innerHTML = access;
+		document.getElementsByClasses(clickid).item(0).value = access;
 
-		// elem2.innerHTML = access;
-		// elem2.value = access;
 	}
 	response("changeadminstatus", a, respons);
 }
 function deletegroup(groupid) {
 	var a = "groupid=" + groupid;
-	response("deletefromgroup", a);
+	function respons() {
+		location.reload();
+	}
+	response("deletefromgroup", a, respons);
+}
+function logout()
+{		
+	var a="";
+	function respons()
+	{
+		location.reload();
+	}
+	response("logout",a,respons);
 }

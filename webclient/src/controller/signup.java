@@ -38,15 +38,18 @@ public class signup extends HttpServlet {
 			boolean usernameChecker = database.usernameChecker(username);
 			response.setContentType("text/html");
 			if (!password.equals(confirmpassword)) {
-				out.print("<span style='color:red'>password and confirm password does not match!</span>");
+				out.print(
+						"<span style='color:red; position: absolute; left: 40%; top: 10%;' >password and confirm password does not match!</span>");
 				RequestDispatcher rd = request.getRequestDispatcher("signup.html");
 				rd.include(request, response);
 			} else if (regexchecker == false) {
-				out.print("<span style='color:red'>enter a valid mobile no!</span>");
+				out.print(
+						"<span style='color:red;  position: absolute; left: 40%; top: 10%;' >enter a valid mobile no!</span>");
 				RequestDispatcher rd = request.getRequestDispatcher("signup.html");
 				rd.include(request, response);
 			} else if (usernameChecker == true) {
-				out.print("<span style='color:red'>username already exists enter a new username!</span>");
+				out.print(
+						"<span style='color:red; position: absolute; left: 40%; top: 10%;'>username already exists enter a new username!</span>");
 				RequestDispatcher rd = request.getRequestDispatcher("signup.html");
 				rd.include(request, response);
 			} else {

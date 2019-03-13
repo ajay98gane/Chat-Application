@@ -1,12 +1,34 @@
 p {
-	background: #97cffb;
+	background: #003366;
 	margin: 0%;
 }
-
+#availbleusers
+{
+	color: white;
+	background:#003366;
+	
+}
 button {
 	background-color: #0583f3;
 	color: #f9fafb;
 	border-color: aliceblue;
+}
+
+button.admin {
+	width: 50px;
+	background-color: #feffff;
+	color: #0436af;
+	border-color: #147de8;
+}
+
+div.friends {
+	max-height: 400px;
+	overflow-y: scroll;
+}
+
+div.group {
+	max-height: 400px;
+	overflow-y: scroll;
 }
 
 #usersa {
@@ -20,7 +42,7 @@ button {
 
 #users {
 	left: 25%;
-	background: #97cffb;
+	background: #003366;
 }
 
 button:hover {
@@ -40,38 +62,33 @@ button:hover {
 }
 
 #showfriend {
-	position: absolute;
-	top: 10%;
-	left: 80%;
-	color: #0030b2;
-	background-color: #95cdfd;
-	box-shadow: inset 0px 0px 1px 1px #63aaea;
-}
+	    position: absolute;
+    top: 10%;
+    left: 80%;
+    color: #0030b2;
+    background-color: #fdfdfd;
+    box-shadow: inset 0px 0px 1px 1px #63aaea;
+    border-color: #147de8;
+    }
 
 #logout {
 	position: absolute;
 	top: 10%;
 	left: 90%;
 	color: #0030b2;
-	background-color: #95cdfd;
+	background-color: #feffff;
 	box-shadow: inset 0px 0px 1px 1px #63aaea;
+	border-color: #147de8;
 }
 
 #displayfriendrequest {
 	position: absolute;
-	left: 80%;
-	top: 8%;
+	left: 79%;
+	top: 9%;
 	z-index: 2;
 	background-color: #95cdfd;
 }
 
-#displayall {
-	position: absolute;
-	left: 30%;
-	width: 50%;
-	top: 5%;
-	z-index: 2;
-}
 
 body {
 	color: #0436af;
@@ -129,8 +146,9 @@ span.to {
 	left: 25%;
 	top: 110%;
 	width: 50%;
-	background-color: #95cdfd;
-}
+	z-index: 2;
+	position: absolute;
+	    background-color: #cccccc;}
 
 #displaymsg {
 	overflow-y: scroll;
@@ -186,6 +204,6 @@ span.fromchattime {
 
 #top {
 	position: relative;
-	background-color: #95cdfd;
+	background-color: #003366;
 	margin-bottom: 1%;
 }

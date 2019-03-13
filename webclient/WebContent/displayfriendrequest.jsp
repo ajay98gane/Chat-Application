@@ -12,7 +12,10 @@
 Map<Integer,String> friendrequestlist=(HashMap<Integer,String>)request.getAttribute("friendrequest");
 if(friendrequestlist!=null)
 {
-	
+	if(friendrequestlist.size()==0)
+	{%>
+		<div style="font-size:15px;">no friendrequest to display</div>
+	<%}
 for(Map.Entry<Integer,String> s:friendrequestlist.entrySet())
 {
 	%><div id="<%=s.getKey() %>"><%=s.getValue() %><button value="<%=s.getKey() %>" onclick="acceptrequest('1',this.value)">accept request</button><button onclick="acceptrequest('0','<%=s.getKey()%>')">reject request</button></div>

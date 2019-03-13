@@ -7,7 +7,7 @@
 <title>Insert title here</title>
 </head>
 <body class="availableusers">
-	<p><%=request.getAttribute("toname")%>
+	<p style="background-color: #93ccff;"><%=request.getAttribute("toname")%>
 		<br>users
 	</p>
 
@@ -19,11 +19,11 @@
 		for (Map.Entry<Integer, List<String>> entry : groupusers.entrySet()) {
 	%>
 	<div class='availableusers'>
-		<span onclick="showvalue('<%=entry.getKey()%>','<%=entry.getValue().get(0)%>')"><%=entry.getValue().get(0)%>   -  </span><button> <%=entry.getValue().get(1).equals("1") ? "admin" : "user" %></button></div>
+		<span onclick="showvalue('<%=entry.getKey()%>','<%=entry.getValue().get(0)%>')"><%=entry.getValue().get(0)%>   -  </span><button class='admin' > <%=entry.getValue().get(1).equals("1") ? "admin" : "user" %></button></div>
 	<%
 		}
 	%>
 	<div class='availableusers'
-		onclick="showvalue('<%=fromid%>','<%=fromname%>')"><%=fromname%>   -   <button>user </button>  <button onclick="removefromgroup('<%=fromid%>','<%=toid%>')">exit group</button></div> 
+		onclick="showvalue('<%=fromid%>','<%=fromname%>')"><%=fromname%>   -   <button  class='admin' >user </button>  <button class='availableusers' onclick="removefromgroup('<%=fromid%>','<%=toid%>')">exit group</button></div> 
 </body>
 </html>

@@ -217,7 +217,7 @@ public class database {
 		Map<Integer, String> availableusers = new HashMap<Integer, String>();
 		con = database.getConnection();
 		PreparedStatement showuser = con.prepareStatement(
-				"SELECT username,user_id FROM userdetails WHERE username LIKE'" + users + "%' AND username <> " + from);
+				"SELECT username,user_id FROM userdetails WHERE username LIKE'" + users + "%' AND user_id <> " + from);
 		ResultSet r = showuser.executeQuery();
 		while (r.next()) {
 			availableusers.put(Integer.parseInt(r.getString("user_id")), r.getString("username"));
@@ -501,7 +501,7 @@ public class database {
 		Connection con = getConnection();
 		PreparedStatement removegroup = con.prepareStatement("delete from msgmap where fromuser=" + groupid);
 		PreparedStatement removegroupdetails = con
-				.prepareStatement("delete from group_id_holder where groupid=" + groupid);
+				.prepareStatement("delete from group_id_holder where group_id=" + groupid);
 		removegroup.executeUpdate();
 		removegroupdetails.executeUpdate();
 		con.close();

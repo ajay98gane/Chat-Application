@@ -15,16 +15,16 @@ import webclient.database;
 @WebServlet("/deletefromgroup")
 public class deletefromgroup extends HttpServlet {
 	private static final long serialVersionUID = 1L;
-  
-	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		int groupid=Integer.parseInt(request.getParameter("groupid"));
+
+	protected void doPost(HttpServletRequest request, HttpServletResponse response)
+			throws ServletException, IOException {
+		int groupid = Integer.parseInt(request.getParameter("groupid"));
 		try {
 			database.deletegroup(groupid);
-			response.sendRedirect("userlist");
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
-		
+
 	}
 
 }

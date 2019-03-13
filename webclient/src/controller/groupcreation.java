@@ -18,9 +18,11 @@ public class groupcreation extends HttpServlet {
 
 	protected void doPost(HttpServletRequest request, HttpServletResponse response)
 			throws ServletException, IOException {
+		try {
+
 		int groupid = Integer.parseInt(request.getParameter("groupid"));
 		String[] groupusers = request.getParameterValues("groupusers");
-		String access ;
+		String access;
 		if (groupusers != null) {
 
 			for (int i = 0; i < groupusers.length; i++) {
@@ -31,15 +33,16 @@ public class groupcreation extends HttpServlet {
 				} else {
 					admin_access = true;
 				}
-				try {
 					database.addUsersToGroup(groupid, Integer.parseInt(groupusers[i]), true, admin_access);
+				}}
 					response.sendRedirect("userlist");
-				} catch (Exception e) {
-					e.printStackTrace();
-				}
-			}
-		}
+				}catch(
 
+	Exception e)
+	{
+		e.printStackTrace();
 	}
+
+}
 
 }

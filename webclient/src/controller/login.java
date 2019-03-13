@@ -27,7 +27,7 @@ public class login extends HttpServlet {
 			PrintWriter out = response.getWriter();
 			boolean check = database.loginCheck(username, newpass);
 			if (check == false) {
-				out.print("<span style='color:red'>Sorry UserName or Password Error!</span>");
+				out.print("<span style='color:red; position: absolute; left: 40%; top: 10%; ' >Sorry UserName or Password Error!</span>");
 				RequestDispatcher rd = request.getRequestDispatcher("/login.html");
 				rd.include(request, response);
 

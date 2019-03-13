@@ -15,17 +15,18 @@ import webclient.database;
 @WebServlet("/removefromgroup")
 public class removefromgroup extends HttpServlet {
 	private static final long serialVersionUID = 1L;
-    
-	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-	int userid=Integer.parseInt((String)request.getParameter("from"));
-	int groupid=Integer.parseInt((String)request.getParameter("groupid"));
-	try {
-		database.removefromgroup(userid,groupid);
-		response.sendRedirect("userlist");
-	} catch (Exception e) {
-		e.printStackTrace();
-	}
-		
+
+	protected void doPost(HttpServletRequest request, HttpServletResponse response)
+			throws ServletException, IOException {
+		int userid = Integer.parseInt((String) request.getParameter("from"));
+		int groupid = Integer.parseInt((String) request.getParameter("groupid"));
+		try {
+			database.removefromgroup(userid, groupid);
+			response.sendRedirect("userlist");
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+
 	}
 
 }

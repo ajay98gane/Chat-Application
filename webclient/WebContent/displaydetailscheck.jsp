@@ -7,7 +7,7 @@
 <title>Insert title here</title>
 </head>
 <body class='availableusers'>
-<p><%=(String)request.getAttribute("toname") %></p>
+<p style="background-color: #93ccff;"><%=(String)request.getAttribute("toname") %></p>
 <%  Map<String,String> userdetails=(HashMap<String,String>)request.getAttribute("userdetails");
 for(Map.Entry<String,String> entry : userdetails.entrySet())
 {

@@ -4,7 +4,7 @@
 <%@page import="java.util.*"%><%@page import="org.json.*"%>
 
 
-<div class="availableusers"
+<div class="availableusers" style="color:white;"
 	onclick="showvalue(<%=(Integer) request.getAttribute("to")%>,'<%=(String) request.getAttribute("toname")%>')"><%=(String) request.getAttribute("toname")%></div>
 
 <div id="testing">
