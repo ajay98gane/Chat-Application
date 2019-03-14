@@ -1,5 +1,5 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
-    pageEncoding="UTF-8"%><%@page import="java.util.*" %>
+    pageEncoding="UTF-8"%><%@page import="java.util.*" %><%@page import="webclient.*" %>
 <!DOCTYPE html>
 <html>
 <head>
@@ -18,15 +18,16 @@ for(Map.Entry<String,String> entry : userdetails.entrySet())
 	
 	<button class='availableusers'value="<%=request.getAttribute("bool")%>" onclick="wsSendFriendRequest(this.value,'<%=(Integer)request.getAttribute("to")%>')"><%=request.getAttribute("bool")%></button>
 	<details class='availableusers'><summary class='availableusers'>friends</summary>
-	<%  Map<Integer,List<String>> friends=(HashMap<Integer,List<String>>)request.getAttribute("friends");
-	for(Map.Entry<Integer,List<String>> entry:friends.entrySet()){%>
-	<p class='availableusers'onclick="showvalue('<%=entry.getKey() %>','<%= entry.getValue().get(0) %>')"><%=entry.getValue().get(0) %></p><%} %>
-	</details>
-	<details class='availableusers'><summary class='availableusers'>group</summary>
-	<%  Map<Integer,List<String>> group=(HashMap<Integer,List<String>>)request.getAttribute("group");
-	for(Map.Entry<Integer,List<String>> entry:group.entrySet()){%>
-	<p  class='availableusers' onclick="showvalue('<%=entry.getKey() %>','<%= entry.getValue().get(0) %>')"><%=entry.getValue().get(0) %></p><%}
+	<% 	 List<Pair<Users,String>> friends=(ArrayList<Pair<Users,String>>)request.getAttribute("friends");
+	for(Pair<Users,String> entry:friends){%>
+	<p  class='availableusers' onclick="showvalue('<%=entry.getLeft().getId() %>'.'<%= entry.getLeft().getName() %>')"><%=entry.getLeft().getName() %></p><%}
 	%>
 	</details>
-</body>
+	<details class='availableusers'><summary class='availableusers'>group</summary>
+		<% 	 List<Pair<Group,String>> group=(ArrayList<Pair<Group,String>>)request.getAttribute("group");
+	for(Pair<Users,String> entry:friends){%>
+	
+	<p  class='availableusers' onclick="showvalue('<%=entry.getLeft().getId() %>'.'<%= entry.getLeft().getName() %>')"><%=entry.getLeft().getName() %></p><%}
+	%>
+	</details></body>
 </html>

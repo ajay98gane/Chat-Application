@@ -12,7 +12,41 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
-public class database {
+import javax.servlet.ServletContextEvent;
+import javax.servlet.ServletContextListener;
+import javax.servlet.ServletException;
+import javax.servlet.http.HttpServlet;
+
+public class database implements ServletContextListener {
+	@Override
+	public void contextInitialized(ServletContextEvent arg0) {
+		try {
+
+			Connection con = getConnection();
+			PreparedStatement createmtable = con.prepareStatement(
+					"CREATE TABLE IF NOT EXISTS userdetails(user_id INT PRIMARY KEY ,username TEXT ,mobileno TEXT ,name TEXT,emailid TEXT,address TEXT)");
+			createmtable.executeUpdate();
+			PreparedStatement createetable = con
+					.prepareStatement("CREATE TABLE IF NOT EXISTS password(username TEXT,pass TEXT)");
+			createetable.executeUpdate();
+			PreparedStatement createmsgtable = con.prepareStatement(
+					"CREATE TABLE IF NOT EXISTS messages(pair_id INT,msg TEXT,timeat TIMESTAMP DEFAULT CURRENT_TIMESTAMP)");
+			createmsgtable.executeUpdate();
+			PreparedStatement createmaptable = con.prepareStatement(
+					"CREATE TABLE IF NOT EXISTS msgmap(fromuser INT,touser INT,notif INT DEFAULT '0',pair_id INT PRIMARY KEY AUTO_INCREMENT,group_verify boolean DEFAULT FALSE,admin_access boolean DEFAULT FALSE)");
+			createmaptable.executeUpdate();
+			PreparedStatement createfriendrequest = con
+					.prepareStatement("CREATE TABLE IF NOT EXISTS friendrequest(fromuser INT,touser INT)");
+			createfriendrequest.executeUpdate();
+			PreparedStatement createtableid = con.prepareStatement(
+					"CREATE TABLE IF NOT EXISTS group_id_holder(group_id INT PRIMARY KEY,groupname TEXT,timeat TIMESTAMP DEFAULT CURRENT_TIMESTAMP)");
+			createtableid.executeUpdate();
+			con.close();
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+	}
+
 	public static Connection getConnection() throws Exception {
 		Class driver_class = Class.forName("com.mysql.jdbc.Driver");
 		Driver driver = (Driver) driver_class.newInstance();
@@ -34,34 +68,6 @@ public class database {
 		}
 		con.close();
 		return usernam;
-	}
-
-	public static void createInfoTable() throws Exception {
-		Connection con = getConnection();
-		try {
-			PreparedStatement createmtable = con.prepareStatement(
-					"CREATE TABLE IF NOT EXISTS userdetails(user_id INT PRIMARY KEY ,username TEXT ,mobileno TEXT ,name TEXT,emailid TEXT,address TEXT)");
-			createmtable.executeUpdate();
-			PreparedStatement createetable = con
-					.prepareStatement("CREATE TABLE IF NOT EXISTS password(username TEXT,pass TEXT)");
-			createetable.executeUpdate();
-			PreparedStatement createmsgtable = con.prepareStatement(
-					"CREATE TABLE IF NOT EXISTS messages(pair_id INT,msg TEXT,timeat TIMESTAMP DEFAULT CURRENT_TIMESTAMP)");
-			createmsgtable.executeUpdate();
-			PreparedStatement createmaptable = con.prepareStatement(
-					"CREATE TABLE IF NOT EXISTS msgmap(fromuser INT,touser INT,notif INT DEFAULT '0',pair_id INT PRIMARY KEY AUTO_INCREMENT,group_verify boolean DEFAULT FALSE,admin_access boolean DEFAULT FALSE)");
-			createmaptable.executeUpdate();
-			PreparedStatement createfriendrequest = con
-					.prepareStatement("CREATE TABLE IF NOT EXISTS friendrequest(fromuser INT,touser INT)");
-			createfriendrequest.executeUpdate();
-			PreparedStatement createtableid = con.prepareStatement(
-					"CREATE TABLE IF NOT EXISTS group_id_holder(group_id INT PRIMARY KEY,groupname TEXT,timeat TIMESTAMP DEFAULT CURRENT_TIMESTAMP)");
-			createtableid.executeUpdate();
-
-			con.close();
-		} catch (SQLSyntaxErrorException e) {
-			e.printStackTrace();
-		}
 	}
 
 	public static String getUserId(String username) throws Exception {
@@ -90,7 +96,6 @@ public class database {
 	public static void addValueInfoTable(int uniqueUserId, String username, String pass, String name, String mobileno,
 			String emailid, String address) throws Exception {
 		Connection con = getConnection();
-		createInfoTable();
 		PreparedStatement putinfotable = con.prepareStatement("INSERT INTO userdetails VALUES(" + uniqueUserId + ",'"
 				+ username + "','" + mobileno + "','" + name + "','" + emailid + "','" + address + "')");
 		PreparedStatement putpasstable = con
@@ -102,7 +107,6 @@ public class database {
 
 	public static boolean loginCheck(String user, String pass) throws Exception {
 		Connection con = getConnection();
-		createInfoTable();
 		boolean check = false;
 		PreparedStatement checkLogin = con.prepareStatement("SELECT pass FROM password WHERE username='" + user + "'");
 		ResultSet result = checkLogin.executeQuery();
@@ -146,10 +150,8 @@ public class database {
 
 	}
 
-	public static Map<Integer, List<String>> getFriends(int username) throws Exception {
-		// Map<Integer,String> notiflist=new LinkedHashMap<Integer,String>();
-		Map<Integer, List<String>> friendlist = new LinkedHashMap<Integer, List<String>>();
-		List<String> templist = new ArrayList<String>();
+	public static List<Pair<Users, String>> getFriends(int username) throws Exception {
+		List<Pair<Users, String>> friendlist = new ArrayList<>();
 
 		Connection con = database.getConnection();
 
@@ -158,23 +160,18 @@ public class database {
 						+ username + " AND msgmap.group_verify=false");
 		ResultSet result = checkLogin.executeQuery();
 		while (result.next()) {
-			// templist.clear();
-			Listcontainer lc = new Listcontainer(result.getString("username"), result.getString("notif"));
-			templist = lc.getList();
-			// notiflist.put(Integer.parseInt(result.getString("fromuser")),result.getString("notif"));
-//			templist.add(result.getString("username"));
-//			templist.add(result.getString("notif"));
 
-			friendlist.put(Integer.parseInt(result.getString("fromuser")), templist);
+			Users user = new Users(Integer.parseInt(result.getString("fromuser")), result.getString("username"));
+			Pair<Users, String> pair = new Pair<>(user, result.getString("notif"));
+			friendlist.add(pair);
 		}
 		con.close();
 		return friendlist;
 
 	}
 
-	public static Map<Integer, List<String>> getGroup(int username) throws Exception {
-		Map<Integer, List<String>> grouplist = new LinkedHashMap<Integer, List<String>>();
-		List<String> templist = new ArrayList<String>();
+	public static List<Pair<Group, String>> getGroup(int username) throws Exception {
+		List<Pair<Group, String>> grouplist = new ArrayList<>();
 
 		Connection con = database.getConnection();
 
@@ -183,18 +180,16 @@ public class database {
 						+ username + " and msgmap.group_verify=true");
 		ResultSet result = checkLogin.executeQuery();
 		while (result.next()) {
-			Listcontainer lc = new Listcontainer(result.getString("groupname"), result.getString("notif"));
-			templist = lc.getList();
-
-			grouplist.put(Integer.parseInt(result.getString("fromuser")), templist);
+			Group user = new Group(Integer.parseInt(result.getString("fromuser")), result.getString("groupname"));
+			Pair<Group, String> pair = new Pair<>(user, result.getString("notif"));
+			grouplist.add(pair);
 		}
 		con.close();
 		return grouplist;
 	}
 
-	public static Map<Integer, List<String>> friendsNotInGroup(int fromid, int groupid) throws Exception {
-		Map<Integer, List<String>> friendlist = new HashMap<>();
-		List<String> templist = new ArrayList<String>();
+	public static List<Pair<Users,String>> friendsNotInGroup(int fromid, int groupid) throws Exception {
+		List<Pair<Users, String>> friendlist = new ArrayList<>();
 
 		Connection con = getConnection();
 		PreparedStatement friendList = con.prepareStatement(
@@ -203,10 +198,10 @@ public class database {
 						+ ")");
 		ResultSet adduserstogroup = friendList.executeQuery();
 		while (adduserstogroup.next()) {
-			Listcontainer lc = new Listcontainer(adduserstogroup.getString("username"), "0");
-			templist = lc.getList();
-
-			friendlist.put(Integer.parseInt(adduserstogroup.getString("fromuser")), templist);
+			Users user = new Users(Integer.parseInt(adduserstogroup.getString("fromuser")), adduserstogroup.getString("username"));
+			Pair<Users, String> pair = new Pair<>(user,"0");
+			friendlist.add(pair);
+			
 
 		}
 		return friendlist;
@@ -354,9 +349,8 @@ public class database {
 
 	}
 
-	public static NestedListHolder getGroupMessagesAndTime(int groupid, int fromid, String no) throws Exception {
-		List<List<String>> messages = new ArrayList<>();
-		List<String> time = new ArrayList<String>();
+	public static List<Message> getGroupMessagesAndTime(int groupid, int fromid, String no) throws Exception {
+		List<Message> messages = new ArrayList<>();
 		Connection con = getConnection();
 		PreparedStatement checkLogin;
 		if (no == null) {
@@ -372,30 +366,23 @@ public class database {
 		ResultSet result = checkLogin.executeQuery();
 		while (result.next()) {
 			if (result.getString("touser").equals(fromid + "")) {
-				Listcontainer lc = new Listcontainer(result.getString("username"),
-						"{\"user\":\"0\",\"msg\":\"" + result.getString("msg") + "\"}");
-				// messages.add("{\"user\":\"0\",\"msg\":\"" + result.getString("msg") + "\"}");
-				messages.add(lc.getList());
-				time.add(result.getString("cast(messages.timeat as time)"));
+
+				messages.add(new Message(result.getString("username"), result.getString("msg"),
+						result.getString("cast(messages.timeat as time)"), "0"));
 			} else {
-				Listcontainer lc = new Listcontainer(result.getString("username"),
-						"{\"user\":\"1\",\"msg\":\"" + result.getString("msg") + "\"}");
 
-//				messages.add("{\"user\":\"1\",\"msg\":\"" + result.getString("msg") + "\"}");
-				messages.add(lc.getList());
-
-				time.add(result.getString("cast(messages.timeat as time)"));
+				messages.add(new Message(result.getString("username"), result.getString("msg"),
+						result.getString("cast(messages.timeat as time)"), "1"));
 
 			}
 		}
 		con.close();
-		return new NestedListHolder(messages, time);
+		return messages;
 
 	}
 
-	public static ListHolder getMessagesAndTime(int fromid, int toid, String no) throws Exception {
-		List<String> messages = new ArrayList<String>();
-		List<String> time = new ArrayList<String>();
+	public static List<Message> getMessagesAndTime(int fromid, int toid, String no) throws Exception {
+		List<Message> messages = new ArrayList<>();
 		Connection con = getConnection();
 		PreparedStatement checkLogin;
 		if (no == null) {
@@ -409,16 +396,16 @@ public class database {
 		ResultSet result = checkLogin.executeQuery();
 		while (result.next()) {
 			if (result.getString("pair_id").equals(fromid + "")) {
-				messages.add("{\"user\":\"0\",\"msg\":\"" + result.getString("msg") + "\"}");
-				time.add(result.getString("cast(timeat as time)"));
+
+				messages.add(new Message("0", result.getString("msg"), result.getString("cast(timeat as time)")));
 			} else {
-				messages.add("{\"user\":\"1\",\"msg\":\"" + result.getString("msg") + "\"}");
-				time.add(result.getString("cast(timeat as time)"));
+
+				messages.add(new Message("1", result.getString("msg"), result.getString("cast(timeat as time)")));
 
 			}
 		}
 		con.close();
-		return new ListHolder(messages, time);
+		return messages;
 
 	}
 
@@ -439,7 +426,7 @@ public class database {
 //	public static List<String> getGrouUsers(int groupid, int fromid) throws Exception {
 //		Connection con = getConnection();
 //		List<String> groupusers = new ArrayList<>();
-//		PreparedStatement getgroupusers = con
+//		PreparedStatement fgets = con
 //				.prepareStatement("select touser from msgmap where fromuser=" + groupid + " and touser <> " + fromid);
 //		ResultSet groupUsers = getgroupusers.executeQuery();
 //		while (groupUsers.next()) {
@@ -449,18 +436,18 @@ public class database {
 //		return groupusers;
 //
 //	}
-	public static Map<Integer, List<String>> getGroupUserDetails(int groupid, int fromid) throws Exception {
+	public static List<GroupUser> getGroupUserDetails(int groupid, int fromid) throws Exception {
 		Connection con = getConnection();
-		Map<Integer, List<String>> groupuserdetails = new HashMap<>();
-		List<String> templist = new ArrayList<String>();
+		List<GroupUser> groupuserdetails = new ArrayList<>();
 		PreparedStatement userdetails = con.prepareStatement(
 				"select msgmap.touser,userdetails.username,msgmap.admin_access from msgmap inner join userdetails on userdetails.user_id=msgmap.touser where msgmap.fromuser="
 						+ groupid + " and msgmap.touser<>" + fromid);
 		ResultSet getUsers = userdetails.executeQuery();
 		while (getUsers.next()) {
-			Listcontainer lc = new Listcontainer(getUsers.getString("username"), getUsers.getString("admin_access"));
-			templist = lc.getList();
-			groupuserdetails.put(Integer.parseInt(getUsers.getString("touser")), templist);
+			
+			Users user=new Users(Integer.parseInt(getUsers.getString("touser")),getUsers.getString("username"));
+			GroupUser groupUsers=new GroupUser(getUsers.getString("admin_access"),user);
+			groupuserdetails.add(groupUsers);
 		}
 		con.close();
 		return groupuserdetails;

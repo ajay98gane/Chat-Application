@@ -2,23 +2,19 @@
 	contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%><%@page
 	import="webclient.*"%><%@page import="java.util.*"%><%@page
 	import="org.json.*"%><%
-	String fromme;
-	String fromu;
-	List<String> msglist = (ArrayList<String>) request.getAttribute("msglist");
-	List<String> time = (ArrayList<String>) request.getAttribute("timelist");
+	
+	List<Message> msglist = (ArrayList<Message>) request.getAttribute("msglist");
 
-	for (int i = 0; i < msglist.size(); i++) {
-		//System.out.println(s.getKey() + s.getValue());	
-		JSONObject message = new JSONObject(msglist.get(i));
-
-		if (((String) message.get("user")).equals("0")) {
-%><span class="from"><span class="fromsub"><%=((String) message.get("msg"))%></span><span
-	class="fromchattime"><%=time.get(i)%></span></span>
+		for(Message msg:msglist)
+		{
+		if (msg.getUser().equals("0")) {
+%><span class="from"><span class="fromsub"><%=(msg.getText())%></span><span
+	class="fromchattime"><%=msg.getTime()%></span></span>
 <br>
 <%
 	} else {
-%><span class="to"><span class="tosub"><%=(String) message.get("msg")%></span><span
-	class="tochattime"><%=time.get(i)%></span></span>
+%><span class="to"><span class="tosub"><%=msg.getText()%></span><span
+	class="tochattime"><%=msg.getTime()%></span></span>
 <br>
 <%
 	}

@@ -1,5 +1,5 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
-	pageEncoding="UTF-8"%><%@page import="java.util.*"%>
+	pageEncoding="UTF-8"%><%@page import="java.util.*"%><%@page import="webclient.*" %>
 <!DOCTYPE html>
 <html>
 <head>
@@ -15,11 +15,11 @@
 		int fromid = (Integer) request.getAttribute("from");
 		int toid = (Integer) request.getAttribute("to");
 		String fromname=(String) request.getAttribute("fromname");
-		Map<Integer, List<String>> groupusers = (Map<Integer, List<String>>) request.getAttribute("userdetails");
-		for (Map.Entry<Integer, List<String>> entry : groupusers.entrySet()) {
+		List<GroupUser> groupusers = (ArrayList<GroupUser>) request.getAttribute("userdetails");
+			for(GroupUser entry:groupusers){
 	%>
 	<div class='availableusers'>
-		<span onclick="showvalue('<%=entry.getKey()%>','<%=entry.getValue().get(0)%>')"><%=entry.getValue().get(0)%>   -  </span><button class='admin' > <%=entry.getValue().get(1).equals("1") ? "admin" : "user" %></button></div>
+		<span onclick="showvalue('<%=entry.getUser().getId()%>','<%=entry.getUser().getName()%>')"><%=entry.getUser().getName()%>   -  </span><button class='admin' > <%=entry.getAdminStatus().equals("1") ? "admin" : "user" %></button></div>
 	<%
 		}
 	%>

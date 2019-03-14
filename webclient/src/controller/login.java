@@ -36,7 +36,7 @@ public class login extends HttpServlet {
 				session.setAttribute("username", username);
 				session.setAttribute("userid", uniqueid);
 
-				response.sendRedirect("userlist");
+				response.sendRedirect("home");
 			}
 
 		} catch (Exception e) {

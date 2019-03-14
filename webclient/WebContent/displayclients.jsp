@@ -54,8 +54,8 @@
 		int id = ((Integer) request.getAttribute("userid"));
 		String username = (String) request.getAttribute("username");
 
-		Map<Integer, List<String>> userlist = (HashMap<Integer, List<String>>) request.getAttribute("list");
-		Map<Integer, List<String>> grouplist = (HashMap<Integer, List<String>>) request.getAttribute("grouplist");
+		List<Pair<Users,String>> userlist = (ArrayList<Pair<Users,String>>) request.getAttribute("list");
+		List<Pair<Group,String>> grouplist = (ArrayList<Pair<Group,String>>) request.getAttribute("grouplist");
 	%>
 	<div id="top">
 		<p style="width: 200px;color: white;
@@ -80,15 +80,15 @@
 				<form name='clients'
 					style="width: 200px; position: relative; right: 300px;">
 					<%
-						for (Map.Entry<Integer, List<String>> entry : userlist.entrySet()) {
+							for(Pair<Users,String> entry:userlist){
 					%>
 					<div style="position: relative;">
 						<button type='button' name='clientlist'
-							value='<%=entry.getKey()%>'
-							onclick="sendinfo(this.value,'<%=(entry.getValue()).get(0)%>')"
-							style="width: 216px; height: 50px; margin-left: 300px; background-color: #feffff; box-shadow: 0px 0px 0 1px #147de8; margin-bottom: 10px; position: relative; left: 1%; color: #0436af; font-size: 20px;"><%=(entry.getValue()).get(0)%></button>
-						<div id='<%=entry.getKey()%>'
-							style="width: 25px; height: 25px; left: 490px; right: 0px; position: absolute; margin-bottom: 30px; bottom: -10px; background-color: #feffff;"><%=(entry.getValue().get(1).equals("0")) ? "" : entry.getValue().get(1)%></div>
+							value='<%=entry.getLeft().getId()%>'
+							onclick="sendinfo(this.value,'<%= entry.getLeft().getName() %>')"
+							style="width: 216px; height: 50px; margin-left: 300px; background-color: #feffff; box-shadow: 0px 0px 0 1px #147de8; margin-bottom: 10px; position: relative; left: 1%; color: #0436af; font-size: 20px;"><%=entry.getLeft().getName()%></button>
+						<div id='<%=entry.getLeft().getId()%>'
+							style="width: 25px; height: 25px; left: 490px; right: 0px; position: absolute; margin-bottom: 30px; bottom: -10px; background-color: #feffff;"><%=(entry.getRight().equals("0")) ? "" : entry.getRight()%></div>
 					</div>
 					<%
 						}
@@ -102,16 +102,15 @@
 					style="width: 200px; position: relative; right: 300px;">
 
 					<%
-						for (Map.Entry<Integer, List<String>> entry : grouplist.entrySet()) {
-							System.out.println(entry.getKey());
+					for(Pair<Group,String> entry:grouplist){
 					%>
 					<div style="position: relative;">
 						<button type='button' name='clientlist'
-							value='<%=entry.getKey()%>'
-							onclick="sendinfo(this.value,'<%=(entry.getValue()).get(0)%>')"
-							style="width: 216px; height: 50px; margin-left: 300px; background-color: #feffff; box-shadow: 0px 0px 0 1px #147de8; margin-bottom: 10px; position: relative; left: 1%; color: #0436af; font-size: 20px;"><%=(entry.getValue()).get(0)%></button>
-						<div id='<%=entry.getKey()%>'
-							style="width: 25px; height: 25px; left: 490px; right: 0px; position: absolute; margin-bottom: 30px; bottom: -10px; background-color: #feffff;"><%=(entry.getValue().get(1).equals("0")) ? "" : entry.getValue().get(1)%></div>
+							value='<%=entry.getLeft().getId()%>'
+							onclick="sendinfo(this.value,'<%=entry.getLeft().getName()%>')"
+							style="width: 216px; height: 50px; margin-left: 300px; background-color: #feffff; box-shadow: 0px 0px 0 1px #147de8; margin-bottom: 10px; position: relative; left: 1%; color: #0436af; font-size: 20px;"><%=(entry.getLeft()).getName()%></button>
+						<div id='<%=entry.getLeft().getId()%>'
+							style="width: 25px; height: 25px; left: 490px; right: 0px; position: absolute; margin-bottom: 30px; bottom: -10px; background-color: #feffff;"><%=(entry.getRight().equals("0")) ? "" : entry.getRight()%></div>
 					</div>
 					<%
 						}

@@ -4,7 +4,9 @@ import java.io.IOException;
 import java.util.*;
 import org.json.*;
 import javax.websocket.*;
-import webclient.database;
+
+import webclient.Friends;
+import webclient.*;
 import javax.websocket.server.PathParam;
 import javax.websocket.server.ServerEndpoint;
 
@@ -37,15 +39,15 @@ public class websocket {
 					+ "\",\"id\":\"" + num + "\",\"fromname\":\"" + (String) message.get("fromname") + "\"";
 			boolean groupCheck = database.checkGroup(to);
 			if (groupCheck == true) {
-				Map<Integer, List<String>> groupusers = database.getGroupUserDetails(to, from);
+				List<GroupUser> groupusers = database.getGroupUserDetails(to, from);
 				send = send + ",\"group\":\"true\"}";
-				for (Map.Entry<Integer, List<String>> a : groupusers.entrySet()) {
-					if (clientDetails.containsKey(a.getKey()+"")) {
-						Session s = clientDetails.get(a.getKey()+"");
+				for (GroupUser a : groupusers) {
+					if (clientDetails.containsKey(a.getUser().getId() + "")) {
+						Session s = clientDetails.get(a.getUser().getId() + "");
 						if (s.isOpen()) {
 							s.getBasicRemote().sendText(send);
 						} else {
-							int no = Integer.parseInt(database.getId(to, (a.getKey())));
+							int no = Integer.parseInt(database.getId(to, (a.getUser().getId())));
 							String temporary = database.getNotif(no);
 							int count = 0;
 							if (temporary != null) {
@@ -54,7 +56,7 @@ public class websocket {
 							database.updateNotif(count, no);
 						}
 					} else {
-						int no = Integer.parseInt(database.getId(to,(a.getKey())));
+						int no = Integer.parseInt(database.getId(to, (a.getUser().getId())));
 						String temporary = database.getNotif(no);
 						int count = 0;
 						if (temporary != null) {
@@ -80,26 +82,6 @@ public class websocket {
 					database.updateNotif(count, Integer.parseInt(num));
 				}
 
-			}
-		} else if (((String) message.get("status")).equalsIgnoreCase("add friend")) {
-			database.sendFriendRequest(from, to);
-		} else if (((String) message.get("status")).equalsIgnoreCase("remove friend")) {
-			database.removeFriend(from, to);
-		} else if (((String) message.get("status")).equalsIgnoreCase("accept friend")) {
-			try {
-				database.removeFriendRequest(from, to);
-
-				database.addFriend(from, to);
-
-			} catch (Exception e) {
-				e.printStackTrace();
-			}
-		} else if (((String) message.get("status")).equalsIgnoreCase("cancel request")) {
-			try {
-				database.removeFriendRequest(from, to);
-
-			} catch (Exception e) {
-				e.printStackTrace();
 			}
 		}
 	}

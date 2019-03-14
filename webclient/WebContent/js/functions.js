@@ -1,16 +1,22 @@
 var xhttp = new XMLHttpRequest();
-function response(sendto, params, callback) {
+function response(post, sendto, params, callback) {
 
 	xhttp.onreadystatechange = function() {
 		if (xhttp.readyState == 4 && xhttp.status == 200) {
 			callback();
 
 		}
-	};
-	xhttp.open("POST", sendto, true);
-	xhttp.setRequestHeader("Authorization", "abc");
-	xhttp.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
-	xhttp.send(params);
+	};		
+	if (post == "POST") {
+		xhttp.open("POST", sendto, true);
+		xhttp.setRequestHeader("Authorization", "abc");
+		xhttp.setRequestHeader("Content-type",
+				"application/x-www-form-urlencoded");
+		xhttp.send(params);
+	} else if (post == "GET") {
+		xhttp.open("GET", sendto + "?" + params, true);
+		xhttp.send();
+	}
 }
 function wsSendMessage(msg) {
 
@@ -76,7 +82,7 @@ function wsGetMessage(message) {
 			function respons() {
 				document.getElementById(msg.to).innerHTML = xhttp.responseText;
 			}
-			response("notif", "from=" + msg.to + "&to=" + id, respons);
+			response("POST", "notif", "from=" + msg.to + "&to=" + id, respons);
 		}
 	} else {
 		if ((window.user.localeCompare(msg.from)) == 0) {
@@ -87,10 +93,8 @@ function wsGetMessage(message) {
 			spanmain.appendChild(span);
 			spanmain.setAttribute('class', 'to');
 			var today = new Date();
-			// var time = today.getHours() + ":" + today.getMinutes() + ":"
-			// + today.getSeconds();
-			var time = today.toLocaleTimeString();
 
+			var time = today.toLocaleTimeString();
 			var spantime = document.createElement("span");
 			spantime.setAttribute('class', 'tochattime');
 
@@ -105,16 +109,23 @@ function wsGetMessage(message) {
 			function respons() {
 				document.getElementById(msg.from).innerHTML = xhttp.responseText;
 			}
-			response("notif", "from=" + msg.from + "&to=" + msg.to, respons);
+			response("POST", "notif", "from=" + msg.from + "&to=" + msg.to,
+					respons);
 
 		}
 	}
 
 }
 function wsSendFriendRequest(status, to) {
-	var object = '{"to":"' + to + '","from":"' + id + '","msg":"1","status":"'
-			+ status + '"}';
-	webSocket.send(object);
+	// var object = '{"to":"' + to + '","from":"' + id +
+	// '","msg":"1","status":"'
+	// + status + '"}';
+	// webSocket.send(object);
+	var a = "to=" + to + "&from=" + id + "&status=" + status;
+	function respons() {
+		location.reload();
+	}
+	response("POST", "friendrequesthandler", a, respons);
 }
 
 function showvalue(str, toname) {
@@ -125,7 +136,7 @@ function showvalue(str, toname) {
 	function respons() {
 		document.getElementById("usersa").innerHTML = xhttp.responseText;
 	}
-	response("displaydetails", a, respons);
+	response("GET", "displaydetails", a, respons);
 
 }
 
@@ -141,7 +152,7 @@ function sendinfo(str, toname) {
 			element.scrollTop = element.scrollHeight;
 		}
 	}
-	response("sendbox", a, scrolldown);
+	response("POST", "sendbox", a, scrolldown);
 	document.getElementById(str).innerHTML = "";
 
 }
@@ -153,14 +164,12 @@ function searchInfo() {
 		document.getElementById("displayall").innerHTML = xhttp.responseText;
 	}
 	if (name != "") {
-			
-		document.getElementById("displayall").style.display="block";
-		response("showalluser", senda, respons);
+
+		document.getElementById("displayall").style.display = "block";
+		response("GET", "showalluser", senda, respons);
+	} else {
+		document.getElementById("displayall").style.display = "none";
 	}
-	else
-		{
-		document.getElementById("displayall").style.display="none";
-		}
 
 }
 function showFriendRequest() {
@@ -170,14 +179,17 @@ function showFriendRequest() {
 	function respons() {
 		document.getElementById("displayfriendrequest").innerHTML = xhttp.responseText;
 	}
-	response("displayfriendrequest", a, respons);
+	response("GET", "displayfriendrequest", a, respons);
 
 }
 function acceptrequest(num, to) {
 
 	var a = "from=" + id + "&to=" + to + "&num=" + num;
+	function respons() {
+		location.reload();
+	}
 
-	response("acceptfriend", a);
+	response("POST", "acceptfriend", a, respons);
 
 }
 function sendclick(e) {
@@ -199,6 +211,8 @@ function scrollingfunction(userid, username) {
 
 		function prepend() {
 			var elementa = document.createElement("div");
+			console.log(xhttp.responseText);
+
 
 			elementa.innerHTML = xhttp.responseText;
 			var div = document.getElementById("secondtest");
@@ -224,19 +238,17 @@ function scrollingfunction(userid, username) {
 			}
 
 		}
-		response("sendbox", a, prepend);
+		response("GET", "sendbox", a, prepend);
 
 	}
 
 }
 function createnewgroup() {
 	var a = "from=" + id;
-	if (from != "") {
-		function respons() {
-			document.getElementById("usersa").innerHTML = xhttp.responseText;
-		}
-		response("createnewgroup.jsp", a, respons);
+	function respons() {
+		document.getElementById("usersa").innerHTML = xhttp.responseText;
 	}
+	response("POST", "createnewgroup.jsp", a, respons);
 
 }
 function newGroupUser(groupname, groupid) {
@@ -245,12 +257,12 @@ function newGroupUser(groupname, groupid) {
 	function respons() {
 		document.getElementById("usersa").innerHTML = xhttp.responseText;
 	}
-	response("createnewgroup", a, respons);
+	response("POST", "createnewgroup", a, respons);
 
 }
 function removefromgroup(fromid, groupid) {
 	var a = "from=" + fromid + "&groupid=" + groupid;
-	response("removefromgroup", a);
+	response("POST", "removefromgroup", a);
 
 }
 function changeadminstatus(str, fromid, groupid, clickid) {
@@ -262,25 +274,23 @@ function changeadminstatus(str, fromid, groupid, clickid) {
 		access = "admin"
 	}
 	function respons() {
-		document.getElementsByClasses(clickid).item(0).innerHTML = access;
-		document.getElementsByClasses(clickid).item(0).value = access;
+		document.getElementsByName(clickid).item(0).innerHTML = access;
+		document.getElementsByName(clickid).item(0).value = access;
 
 	}
-	response("changeadminstatus", a, respons);
+	response("POST", "changeadminstatus", a, respons);
 }
 function deletegroup(groupid) {
 	var a = "groupid=" + groupid;
 	function respons() {
 		location.reload();
 	}
-	response("deletefromgroup", a, respons);
+	response("POST", "deletefromgroup", a, respons);
 }
-function logout()
-{		
-	var a="";
-	function respons()
-	{
+function logout() {
+	var a = "";
+	function respons() {
 		location.reload();
 	}
-	response("logout",a,respons);
+	response("POST", "logout", a, respons);
 }

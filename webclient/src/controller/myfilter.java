@@ -17,9 +17,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
-/**
- * Servlet Filter implementation class myfilter
- */
+
 @WebFilter(filterName = "myfilter", urlPatterns = { "/*" }, initParams = {
 		@WebInitParam(name = "excludedurls", value = "/index.html,/login.html,/signup.html,/login,/signup") })
 public class myfilter implements Filter {
@@ -33,7 +31,6 @@ public class myfilter implements Filter {
 		if (!excludedurls.contains(path)) {
 			HttpSession session = ((HttpServletRequest) request).getSession(false);
 			if (session == null) {
-				System.out.println("b");
 				((HttpServletResponse) response).sendRedirect("index.html");
 			} else {
 				chain.doFilter(request, response);

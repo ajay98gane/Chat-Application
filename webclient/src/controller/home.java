@@ -1,6 +1,7 @@
 package controller;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -12,22 +13,23 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 import webclient.database;
-@WebServlet("/userlist")
-public class userlist extends HttpServlet {
+import webclient.*;
+@WebServlet("/home")
+public class home extends HttpServlet {
 
 	private static final long serialVersionUID = 1L;
 
 	protected void service(HttpServletRequest request, HttpServletResponse response)
 			throws ServletException, IOException {
-		Map<Integer, List<String>> friendlist = new HashMap<Integer, List<String>>();
-		Map<Integer, List<String>> grouplist = new HashMap<Integer, List<String>>();
+		ArrayList<Pair<Users,String>> friendlist;
+		ArrayList<Pair<Group,String>> grouplist;
 		HttpSession session = request.getSession(false);
 		String username = (String) session.getAttribute("username");
 		int userId = ((Integer) session.getAttribute("userid"));
 		try {
 
-			friendlist = (HashMap<Integer, List<String>>) database.getFriends(userId);
-			grouplist = (HashMap<Integer, List<String>>) database.getGroup(userId);
+			friendlist = (ArrayList<Pair<Users,String>>) database.getFriends(userId);
+			grouplist = (ArrayList<Pair<Group,String>>) database.getGroup(userId);
 			request.setAttribute("username", username);
 			request.setAttribute("userid", userId);
 			request.setAttribute("list", friendlist);

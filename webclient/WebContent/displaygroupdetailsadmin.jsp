@@ -1,5 +1,6 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
-    pageEncoding="UTF-8"%><%@page import="java.util.*"%>
+    pageEncoding="UTF-8"%><%@page import="java.util.*"%><%@page import="webclient.*" %>
+    
 <!DOCTYPE html>
 <html>
 <head>
@@ -16,12 +17,13 @@
 		<p style="background-color: #93ccff;">users</p>
 	
 		<% 
-		Map<Integer, List<String>> groupusers = (Map<Integer, List<String>>) request.getAttribute("userdetails");
-		for (Map.Entry<Integer, List<String>> entry : groupusers.entrySet()) {
-			a=entry.getValue().get(1).equals("1") ? "admin" : "user";
+		List<GroupUser> groupusers = (ArrayList<GroupUser>) request.getAttribute("userdetails");
+		for(GroupUser entry:groupusers){
+
+			a=entry.getAdminStatus().equals("1") ? "admin" : "user";
 	%>
 	<div class='availableusers' id="groupadminaccess">
-		<span onclick="showvalue('<%=entry.getKey()%>','<%=entry.getValue().get(0)%>')"><%=entry.getValue().get(0)%>   -   </span><button   class="admin" name="<%=entry.getKey() %>" value="<%=a%>" onclick="changeadminstatus(this.value,'<%=fromid%>','<%=toid%>','<%=entry.getKey()%>')"><%=a %></button><button  onclick="removefromgroup('<%=entry.getKey()%>','<%=toid%>')">remove from group</button></div>
+		<span onclick="showvalue('<%=entry.getUser().getId()%>','<%=entry.getUser().getName()%>')"><%=entry.getUser().getName()%>   -   </span><button   class="admin" name="<%=entry.getUser().getId() %>" value="<%=a%>" onclick="changeadminstatus(this.value,'<%=fromid%>','<%=toid%>','<%=entry.getUser().getId()%>')"><%=a %></button><button  onclick="removefromgroup('<%=entry.getUser().getId()%>','<%=toid%>')">remove from group</button></div>
 	<%
 		}
 	%>

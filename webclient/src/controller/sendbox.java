@@ -10,8 +10,7 @@ import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import webclient.ListHolder;
-import webclient.NestedListHolder;
+import webclient.Message;
 import webclient.database;
 
 /**
@@ -25,8 +24,7 @@ public class sendbox extends HttpServlet {
 	protected void service(HttpServletRequest request, HttpServletResponse response)
 			throws ServletException, IOException {
 
-		List<String> messages = new ArrayList<String>();
-		List<String> time = new ArrayList<String>();
+		List<Message> messages = new ArrayList<>();
 		int to = Integer.parseInt(request.getParameter("user"));
 		String toname = request.getParameter("username");
 		int from = Integer.parseInt(request.getParameter("from"));
@@ -40,17 +38,12 @@ public class sendbox extends HttpServlet {
 
 			if ((!fromid.equals(""))) {
 
-				ListHolder lists = database.getMessagesAndTime(Integer.parseInt(fromid), toid, no);
-				messages = lists.getMessages();
-				time = lists.getTime();
-
+				messages = database.getMessagesAndTime(Integer.parseInt(fromid), toid, no);
+				
 				Collections.reverse(messages);
-				Collections.reverse(time);
-
 				request.setAttribute("to", to);
 				request.setAttribute("toname", toname);
-				request.setAttribute("msglist", messages);
-				request.setAttribute("timelist", time);
+				request.setAttribute("msglist",messages);
 				RequestDispatcher rd;
 				if (no == null) {
 					rd = request.getRequestDispatcher("sendtext.jsp");
@@ -60,16 +53,13 @@ public class sendbox extends HttpServlet {
 				}
 				rd.forward(request, response);
 			} else {
-				List<List<String>> groupmessage;
-				NestedListHolder lists = database.getGroupMessagesAndTime(to, from, no);
-				groupmessage = lists.getMessages();
-				time = lists.getTime();
+				List<Message> groupmessage;
+				groupmessage= database.getGroupMessagesAndTime(to, from, no);
+				
 				Collections.reverse(groupmessage);
-				Collections.reverse(time);
 				request.setAttribute("to", to);
 				request.setAttribute("toname", toname);
 				request.setAttribute("msglist", groupmessage);
-				request.setAttribute("timelist", time);
 				RequestDispatcher rd;
 				if (no == null) {
 					rd = request.getRequestDispatcher("groupsentext.jsp");
