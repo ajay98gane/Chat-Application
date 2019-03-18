@@ -5,7 +5,6 @@ import java.util.*;
 import org.json.*;
 import javax.websocket.*;
 
-import webclient.Friends;
 import webclient.*;
 import javax.websocket.server.PathParam;
 import javax.websocket.server.ServerEndpoint;
@@ -38,11 +37,11 @@ public class websocket {
 			String send = "{\"from\":\"" + from + "\",\"to\":\"" + to + "\",\"text\":\"" + (String) message.get("text")
 					+ "\",\"id\":\"" + num + "\",\"fromname\":\"" + (String) message.get("fromname") + "\"";
 			boolean groupCheck = database.checkGroup(to);
-			if (groupCheck == true) {
+			if (groupCheck) {
 				List<GroupUser> groupusers = database.getGroupUserDetails(to, from);
 				send = send + ",\"group\":\"true\"}";
 				for (GroupUser a : groupusers) {
-					if (clientDetails.containsKey(a.getUser().getId() + "")) {
+					if ((clientDetails.containsKey(a.getUser().getId() + ""))&&(a.getUser().getId()!=from)) {
 						Session s = clientDetails.get(a.getUser().getId() + "");
 						if (s.isOpen()) {
 							s.getBasicRemote().sendText(send);

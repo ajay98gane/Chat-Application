@@ -17,7 +17,6 @@
 				<%
 					String fromme;
 					String fromu;
-					System.out.println("check");
 					List<Message> msglist = (ArrayList<Message>) request.getAttribute("msglist");
 /* 					List<String> time = (ArrayList<String>) request.getAttribute("timelist");
  */

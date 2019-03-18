@@ -19,13 +19,15 @@
 		<% 
 		List<GroupUser> groupusers = (ArrayList<GroupUser>) request.getAttribute("userdetails");
 		for(GroupUser entry:groupusers){
+			if(entry.getUser().getId()!=fromid)
+			{
 
 			a=entry.getAdminStatus().equals("1") ? "admin" : "user";
 	%>
 	<div class='availableusers' id="groupadminaccess">
-		<span onclick="showvalue('<%=entry.getUser().getId()%>','<%=entry.getUser().getName()%>')"><%=entry.getUser().getName()%>   -   </span><button   class="admin" name="<%=entry.getUser().getId() %>" value="<%=a%>" onclick="changeadminstatus(this.value,'<%=fromid%>','<%=toid%>','<%=entry.getUser().getId()%>')"><%=a %></button><button  onclick="removefromgroup('<%=entry.getUser().getId()%>','<%=toid%>')">remove from group</button></div>
+		<span  class='availableusers' onclick="showvalue('<%=entry.getUser().getId()%>','<%=entry.getUser().getName()%>')"><%=entry.getUser().getName()%>   -   </span><button   class="admin" name="<%=entry.getUser().getId() %>" value="<%=a%>" onclick="changeadminstatus(this.value,'<%=fromid%>','<%=toid%>','<%=entry.getUser().getId()%>')"><%=a %></button><button  class='availableusers' onclick="removefromgroup('<%=entry.getUser().getId()%>','<%=toid%>')">remove from group</button></div>
 	<%
-		}
+		}}
 	%>
 	<div class='availableusers'
 		onclick="showvalue('<%=fromid%>','<%=fromname%>')"><%=fromname%>   -  <button  class="admin" >admin</button>    <button class="availableusers" onclick="removefromgroup('<%=fromid%>','<%=toid%>')">exit group</button></div> 

@@ -17,13 +17,16 @@
 		String fromname=(String) request.getAttribute("fromname");
 		List<GroupUser> groupusers = (ArrayList<GroupUser>) request.getAttribute("userdetails");
 			for(GroupUser entry:groupusers){
-	%>
+				if(entry.getUser().getId()==fromid)
+				{%>
+				<div class='availableusers'
+		onclick="showvalue('<%=fromid%>','<%=fromname%>')"><%=fromname%>   -   <button  class='admin' >user </button>  <button class='availableusers' onclick="removefromgroup('<%=fromid%>','<%=toid%>')">exit group</button></div> 
+	<%}else{%>
 	<div class='availableusers'>
 		<span onclick="showvalue('<%=entry.getUser().getId()%>','<%=entry.getUser().getName()%>')"><%=entry.getUser().getName()%>   -  </span><button class='admin' > <%=entry.getAdminStatus().equals("1") ? "admin" : "user" %></button></div>
 	<%
-		}
+		}}
 	%>
-	<div class='availableusers'
-		onclick="showvalue('<%=fromid%>','<%=fromname%>')"><%=fromname%>   -   <button  class='admin' >user </button>  <button class='availableusers' onclick="removefromgroup('<%=fromid%>','<%=toid%>')">exit group</button></div> 
+	
 </body>
 </html>

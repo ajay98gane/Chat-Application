@@ -14,20 +14,28 @@ for(Map.Entry<String,String> entry : userdetails.entrySet())
 	
 
 	%><%= entry.getKey() %>:<%= entry.getValue() %><br>
-	<%} %>
+	<%} 
+	boolean friendrequest=(boolean) request.getAttribute("request");
 	
+	if(friendrequest == true)
+	{%>
+	<button class='availableusers' value="<%=request.getAttribute("bool")%>" onclick="wsSendFriendRequest(this.value,'<%=(Integer)request.getAttribute("to")%>')"><%=request.getAttribute("bool")%></button>
+	<button class='availableusers' value="cancel request" onclick="wsSendFriendRequest(this.value,'<%=(Integer)request.getAttribute("to")%>')">deny friend request</button>
+	<%}else{ %>
 	<button class='availableusers'value="<%=request.getAttribute("bool")%>" onclick="wsSendFriendRequest(this.value,'<%=(Integer)request.getAttribute("to")%>')"><%=request.getAttribute("bool")%></button>
 	<details class='availableusers'><summary class='availableusers'>friends</summary>
-	<% 	 List<Pair<Users,String>> friends=(ArrayList<Pair<Users,String>>)request.getAttribute("friends");
+	<% 	} List<Pair<Users,String>> friends=(ArrayList<Pair<Users,String>>)request.getAttribute("friends");
 	for(Pair<Users,String> entry:friends){%>
-	<p  class='availableusers' onclick="showvalue('<%=entry.getLeft().getId() %>'.'<%= entry.getLeft().getName() %>')"><%=entry.getLeft().getName() %></p><%}
+	<p  style='
+    background: #91cbff;' class='availableusers' onclick="showvalue('<%=entry.getLeft().getId() %>','<%= entry.getLeft().getName() %>')"><%=entry.getLeft().getName() %></p><%}
 	%>
 	</details>
 	<details class='availableusers'><summary class='availableusers'>group</summary>
 		<% 	 List<Pair<Group,String>> group=(ArrayList<Pair<Group,String>>)request.getAttribute("group");
-	for(Pair<Users,String> entry:friends){%>
+	for(Pair<Group,String> entry:group){%>
 	
-	<p  class='availableusers' onclick="showvalue('<%=entry.getLeft().getId() %>'.'<%= entry.getLeft().getName() %>')"><%=entry.getLeft().getName() %></p><%}
+	<p style='
+    background: #91cbff;' class='availableusers' onclick="showvalue('<%=entry.getLeft().getId() %>','<%= entry.getLeft().getName() %>')"><%=entry.getLeft().getName() %></p><%}
 	%>
 	</details></body>
 </html>

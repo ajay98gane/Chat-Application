@@ -17,9 +17,8 @@ import javax.servlet.ServletContextListener;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 
-public class database implements ServletContextListener {
-	@Override
-	public void contextInitialized(ServletContextEvent arg0) {
+public class database  {
+		public static void createTable() {
 		try {
 
 			Connection con = getConnection();
@@ -423,25 +422,13 @@ public class database implements ServletContextListener {
 
 	}
 
-//	public static List<String> getGrouUsers(int groupid, int fromid) throws Exception {
-//		Connection con = getConnection();
-//		List<String> groupusers = new ArrayList<>();
-//		PreparedStatement fgets = con
-//				.prepareStatement("select touser from msgmap where fromuser=" + groupid + " and touser <> " + fromid);
-//		ResultSet groupUsers = getgroupusers.executeQuery();
-//		while (groupUsers.next()) {
-//			groupusers.add(groupUsers.getString("touser"));
-//		}
-//		con.close();
-//		return groupusers;
-//
-//	}
+
 	public static List<GroupUser> getGroupUserDetails(int groupid, int fromid) throws Exception {
 		Connection con = getConnection();
 		List<GroupUser> groupuserdetails = new ArrayList<>();
 		PreparedStatement userdetails = con.prepareStatement(
 				"select msgmap.touser,userdetails.username,msgmap.admin_access from msgmap inner join userdetails on userdetails.user_id=msgmap.touser where msgmap.fromuser="
-						+ groupid + " and msgmap.touser<>" + fromid);
+						+ groupid );
 		ResultSet getUsers = userdetails.executeQuery();
 		while (getUsers.next()) {
 			

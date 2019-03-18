@@ -142,6 +142,9 @@ function showvalue(str, toname) {
 
 function sendinfo(str, toname) {
 	window.user = str;
+	i=0;
+	console.log(i);
+
 
 	var a = "user=" + str + "&from=" + id + "&fromname=" + name + "&username="
 			+ toname;
@@ -203,6 +206,7 @@ function sendclick(e) {
 }
 var i = 0;
 function scrollingfunction(userid, username) {
+	console.log(i);
 	var element = document.getElementById("displaymsg");
 	if (element.scrollTop == 0) {
 		i += 1;
@@ -211,8 +215,6 @@ function scrollingfunction(userid, username) {
 
 		function prepend() {
 			var elementa = document.createElement("div");
-			console.log(xhttp.responseText);
-
 
 			elementa.innerHTML = xhttp.responseText;
 			var div = document.getElementById("secondtest");
@@ -262,7 +264,12 @@ function newGroupUser(groupname, groupid) {
 }
 function removefromgroup(fromid, groupid) {
 	var a = "from=" + fromid + "&groupid=" + groupid;
-	response("POST", "removefromgroup", a);
+	console.log(a);
+	function respons()
+	{
+		location.reload();
+	}
+	response("POST", "removefromgroup", a,respons);
 
 }
 function changeadminstatus(str, fromid, groupid, clickid) {

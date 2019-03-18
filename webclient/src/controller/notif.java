@@ -24,7 +24,6 @@ public class notif extends HttpServlet {
 			if (temporary != null) {
 				count = Integer.parseInt(temporary);
 			}
-			System.out.println("notif"+count);
 			database.updateNotif(count, no);
 			response.getWriter().print(++count);
 		} catch (Exception e) {

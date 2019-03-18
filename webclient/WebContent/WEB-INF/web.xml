@@ -11,7 +11,7 @@
   </welcome-file-list>
   <listener>
     <listener-class>
-		webclient.database
+		webclient.servletcontext
     </listener-class>
   </listener>
 </web-app>

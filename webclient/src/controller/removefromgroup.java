@@ -22,7 +22,7 @@ public class removefromgroup extends HttpServlet {
 		int groupid = Integer.parseInt((String) request.getParameter("groupid"));
 		try {
 			database.removefromgroup(userid, groupid);
-			response.sendRedirect("home");
+			//response.sendRedirect("home");
 		} catch (Exception e) {
 			e.printStackTrace();
 		}

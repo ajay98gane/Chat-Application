@@ -5,7 +5,6 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import webclient.Friends;
 import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
@@ -49,11 +48,15 @@ public class displaydetails extends HttpServlet {
 				request.setAttribute("friends", friends);
 				RequestDispatcher rd;
 				if (bool.equals("accept friend")) {
-					rd = request.getRequestDispatcher("displaydetails.jsp");
+					request.setAttribute("request",true);
+					rd = request.getRequestDispatcher("displaydetailscheck.jsp");
 
 				} else if (bool.equals("cancel request")) {
+					request.setAttribute("request",false);
+
 					rd = request.getRequestDispatcher("displaydetailscheck.jsp");
 				} else {
+					request.setAttribute("request",false);
 
 					rd = request.getRequestDispatcher("displaydetailscheck.jsp");
 				}
