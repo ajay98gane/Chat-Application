@@ -65,8 +65,7 @@ function wsGetMessage(message) {
 			spanmain.appendChild(span);
 			spanmain.setAttribute('class', 'to');
 			var today = new Date();
-			// var time = today.getHours() + ":" + today.getMinutes() + ":"
-			// + today.getSeconds();
+		
 			var time = today.toLocaleTimeString();
 			var spantime = document.createElement("span");
 			spantime.setAttribute('class', 'tochattime');
